@@ -9,5 +9,6 @@ const Footer = () => {
     </footer>
   );
 };
-
+//Gia su Thu Oanh code o day ne
+//Code xong thi mo github desktop lên
 export default Footer;
