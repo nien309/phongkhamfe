@@ -1,3 +1,5 @@
+
+'use client';
 import React from 'react';
 
 const servicesData = [
@@ -17,13 +19,20 @@ const servicesData = [
     icon: '👨‍⚕️',
   },
   {
-    title: 'Tiêm Chủng',
-    description: 'Dịch vụ tiêm chủng đầy đủ, an toàn, bảo vệ sức khỏe cộng đồng.',
-    icon: '💉',
+    title: 'X - Quang',
+    description: 'Sử dụng tia X để tạo hình ảnh xương và một số mô đặc. ',
+    
+    icon: '🩻',
+  },
+  {
+    title: 'Siêu Âm',
+    description: 'Dùng sóng âm tần số cao để quan sát cơ quan nội tạng, mô mềm.',
+    icon: '📡',
   },
 ];
 
 const Services = () => {
+  
   return (
     <section id="services" className="py-16 px-6 bg-gray-50">
       <h2 className="text-4xl font-bold text-center mb-12">Dịch Vụ Của Chúng Tôi</h2>
@@ -43,3 +52,4 @@ const Services = () => {
 
 
 export default Services;
+
