@@ -17,13 +17,10 @@ export default function Booking() {
   const [chuyenKhoas, setChuyenKhoas] = useState<string[]>([]);
   const [bacSis, setBacSis] = useState<string[]>([]);
 
-  // Giả lập API gọi danh sách chuyên khoa
   useEffect(() => {
-    // TODO: Thay bằng fetch(`/api/chuyenkhoa`) sau này
     setChuyenKhoas(['Nội tổng quát', 'Tai mũi họng', 'Da liễu']);
   }, []);
 
-  // Khi chọn chuyên khoa, giả lập fetch bác sĩ tương ứng
   useEffect(() => {
     if (formData.chuyenKhoa === 'Nội tổng quát') {
       setBacSis(['BS. Nguyễn Văn A', 'BS. Trần Thị B']);
@@ -34,7 +31,7 @@ export default function Booking() {
     } else {
       setBacSis([]);
     }
-    setFormData(prev => ({ ...prev, bacSi: '' })); // reset khi thay đổi chuyên khoa
+    setFormData(prev => ({ ...prev, bacSi: '' }));
   }, [formData.chuyenKhoa]);
 
   const handleChange = (
@@ -46,106 +43,123 @@ export default function Booking() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Gửi dữ liệu đặt lịch:', formData);
-
-    // Gửi API Laravel sau này: POST /api/dat-lich
-    // await fetch('http://localhost:8000/api/dat-lich', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(formData),
-    // });
   };
 
   return (
-    <section className="max-w-2xl mx-auto bg-white p-6 rounded shadow mt-10">
-      <h2 className="text-2xl font-semibold mb-6 text-blue-700 text-center">Đặt lịch khám</h2>
+    <section className="max-w-3xl mx-auto bg-blue-800 p-6 rounded shadow mt-10">
+      <h2 className="text-2xl font-bold mb-6 text-white text-center">ĐĂNG KÝ KHÁM BỆNH</h2>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input
-          name="hoTen"
-          type="text"
-          placeholder="Họ tên"
-          value={formData.hoTen}
-          onChange={handleChange}
-          className="border p-2 rounded"
-          required
-        />
-        <input
-          name="ngaySinh"
-          type="date"
-          value={formData.ngaySinh}
-          onChange={handleChange}
-          className="border p-2 rounded"
-          required
-        />
-        <select
-          name="gioiTinh"
-          value={formData.gioiTinh}
-          onChange={handleChange}
-          className="border p-2 rounded"
-        >
-          <option value="Nam">Nam</option>
-          <option value="Nữ">Nữ</option>
-          <option value="Khác">Khác</option>
-        </select>
-        <input
-          name="soDienThoai"
-          type="tel"
-          placeholder="Số điện thoại"
-          value={formData.soDienThoai}
-          onChange={handleChange}
-          className="border p-2 rounded"
-          required
-        />
-        <select
-          name="chuyenKhoa"
-          value={formData.chuyenKhoa}
-          onChange={handleChange}
-          className="border p-2 rounded"
-          required
-        >
-          <option value="">-- Chọn chuyên khoa --</option>
-          {chuyenKhoas.map((khoa, idx) => (
-            <option key={idx} value={khoa}>
-              {khoa}
-            </option>
-          ))}
-        </select>
-        <select
-          name="bacSi"
-          value={formData.bacSi}
-          onChange={handleChange}
-          className="border p-2 rounded"
-          required
-        >
-          <option value="">-- Chọn bác sĩ --</option>
-          {bacSis.map((bs, idx) => (
-            <option key={idx} value={bs}>
-              {bs}
-            </option>
-          ))}
-        </select>
-        <select
-          name="khungGio"
-          value={formData.khungGio}
-          onChange={handleChange}
-          className="border p-2 rounded"
-        >
-          <option value="Sáng">Buổi sáng</option>
-          <option value="Chiều">Buổi chiều</option>
-        </select>
-        <input
-          name="ngayKham"
-          type="date"
-          value={formData.ngayKham}
-          onChange={handleChange}
-          className="border p-2 rounded"
-          required
-        />
+        <div>
+          <label className="text-white text-sm">* Chọn chuyên khoa</label>
+          <select
+            name="chuyenKhoa"
+            value={formData.chuyenKhoa}
+            onChange={handleChange}
+            className="border p-2 rounded w-full bg-white text-black"
+            required
+          >
+            <option value="">-- Chọn chuyên khoa --</option>
+            {chuyenKhoas.map((khoa, idx) => (
+              <option key={idx} value={khoa}>
+                {khoa}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-white text-sm">* Chọn bác sĩ</label>
+          <select
+            name="bacSi"
+            value={formData.bacSi}
+            onChange={handleChange}
+            className="border p-2 rounded w-full bg-white text-black"
+            required
+          >
+            <option value="">-- Chọn bác sĩ --</option>
+            {bacSis.map((bs, idx) => (
+              <option key={idx} value={bs}>
+                {bs}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-white text-sm">* Nhập họ và tên đầy đủ</label>
+          <input
+            name="hoTen"
+            type="text"
+            placeholder="Họ tên"
+            value={formData.hoTen}
+            onChange={handleChange}
+            className="border p-2 rounded w-full bg-white text-black"
+            required
+          />
+        </div>
+        <div>
+          <label className="text-white text-sm">* Nhập ngày tháng năm sinh</label>
+          <input
+            name="ngaySinh"
+            type="date"
+            value={formData.ngaySinh}
+            onChange={handleChange}
+            className="border p-2 rounded w-full bg-white text-black"
+            required
+          />
+        </div>
+        <div>
+          <label className="text-white text-sm">* Giới tính</label>
+          <select
+            name="gioiTinh"
+            value={formData.gioiTinh}
+            onChange={handleChange}
+            className="border p-2 rounded w-full bg-white text-black"
+          >
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+            <option value="Khác">Khác</option>
+          </select>
+        </div>
+        <div>
+          <label className="text-white text-sm">* Số điện thoại</label>
+          <input
+            name="soDienThoai"
+            type="tel"
+            placeholder="Điện thoại"
+            value={formData.soDienThoai}
+            onChange={handleChange}
+            className="border p-2 rounded w-full bg-white text-black"
+            required
+          />
+        </div>
+        <div>
+          <label className="text-white text-sm">* Chọn ngày khám</label>
+          <input
+            name="ngayKham"
+            type="date"
+            value={formData.ngayKham}
+            onChange={handleChange}
+            className="border p-2 rounded w-full bg-white text-black"
+            required
+          />
+        </div>
+        <div>
+          <label className="text-white text-sm">* Khung giờ muốn khám</label>
+          <select
+            name="khungGio"
+            value={formData.khungGio}
+            onChange={handleChange}
+            className="border p-2 rounded w-full bg-white text-black"
+          >
+            <option value="Sáng">Sáng 7:30 - 11:30 - Từ Thứ 2 - Thứ 7</option>
+            <option value="Chiều">Chiều 13:00 - 17:30 - Từ Thứ 2 - Thứ 7</option>
+          </select>
+        </div>
         <div className="col-span-1 md:col-span-2 text-center mt-4">
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+            className="bg-white text-blue-800 px-6 py-2 rounded font-semibold hover:bg-gray-100"
           >
-            Đặt lịch ngay
+            ĐẶT LỊCH NGAY
           </button>
         </div>
       </form>
