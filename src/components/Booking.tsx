@@ -129,8 +129,8 @@ export default function Booking() {
           onChange={handleChange}
           className="border p-2 rounded"
         >
-          <option value="Sáng">Buổi sáng</option>
-          <option value="Chiều">Buổi chiều</option>
+          <option value="Sáng">Buổi sáng (7h30-11h30)</option>
+          <option value="Chiều">Buổi chiều (13h30-17h30)</option>
         </select>
         <input
           name="ngayKham"
