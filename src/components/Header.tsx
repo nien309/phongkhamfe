@@ -19,7 +19,7 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+     <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between"> 
         {/* Tên phòng khám */}
         <Link href="/" className="text-2xl font-semibold text-blue-700">
           Đông Dương
