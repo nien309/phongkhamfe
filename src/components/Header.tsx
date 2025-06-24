@@ -9,7 +9,7 @@ const navItems = [
   { label: 'TRANG CHỦ', href: '/' },
   { label: 'CHUYÊN KHOA', href: '/chuyen-khoa' },
   { label: 'BÁC SĨ', href: '/bac-si' },
-  { label: 'DỊCH VỤ', href: '/dich-vu' },
+  { label: 'DỊCH VỤ Y KHOA', href: '/dich-vu' },
   { label: 'ĐẶT LỊCH KHÁM', href: '/dat-lich' },
   { label: 'HƯỚNG DẪN KHÁCH HÀNG', href: '/huong-dan' },
 ];
@@ -20,14 +20,14 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 h-[72px] flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 h-[100px] flex items-center justify-between">
 
         
         {/* Logo được cố định kích thước không làm giãn header */}
         <Link href="/" className="flex items-center space-x-2">
           <div className="h-[100px] w-[100px] relative overflow-hidden">
             <Image
-              src="/images/logo-phongkham.jpg"
+              src="/images/header/logo-phongkham.jpg"
               alt="Logo Đông Dương"
               fill
               style={{ objectFit: 'contain' }}
@@ -59,10 +59,10 @@ export default function Header() {
                 <div className="flex flex-col">
                   
                   <button className="px-4 py-2 text-sm text-center text-black hover:bg-gray-100">
-                    ĐĂNG NHẬP
+                    Đăng Nhập
                   </button>
                   <button className="px-4 py-2 text-sm text-center text-black hover:bg-gray-100">
-                    ĐĂNG XUẤT
+                    Đăng Xuất
                   </button>
                 </div>
               </div>
