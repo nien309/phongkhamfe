@@ -17,7 +17,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 place-items-center text-sm">
           {/* Cột trái: Thông tin phòng khám */}
           <div>
-            <h2 className="text-lg font-bold text-orange-300 mb-4">
+            <h2 className="text-lg font-bold text-yellow-300 mb-4">
               PHÒNG KHÁM ĐÔNG DƯƠNG
             </h2>
 
@@ -48,7 +48,7 @@ const Footer = () => {
               LỊCH LÀM VIỆC
             </h3>
             <ul className="list-disc list-inside space-y-1 mt-2 text-gray-100 text-left md:text-center">
-              <li>Thứ 2 - Chủ nhật | 7:30 - 17:30</li>
+              <li>Thứ 2 - Thứ 7 | 7:30 - 17:30</li>
               <li>Giờ nghỉ trưa: 11:30 - 13:30</li>
             </ul>
           </div>

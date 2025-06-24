@@ -25,21 +25,20 @@ const services = [
     icon: '👨‍⚕️',
   },
   {
-    id: 4,
-    name: 'X-Quang',
-    desc: 'Sử dụng tia X để tạo hình ảnh xương và một số mô đặc.',
+    title: 'X - Quang',
+    description: 'Sử dụng tia X để tạo hình ảnh xương và một số mô đặc. ',
+    
     icon: '🩻',
   },
   {
-    id: 5,
-    name: 'Siêu Âm',
-    desc: 'Dùng sóng âm tần số cao để quan sát cơ quan nội tạng.',
+    title: 'Siêu Âm',
+    description: 'Dùng sóng âm tần số cao để quan sát cơ quan nội tạng, mô mềm.',
     icon: '📡',
   },
 ];
 
-//Khai báo component function ServicesSection
-const ServicesSection = () => {
+const Services = () => {
+  
   return (
     <section id="services" className="py-16 bg-slate-50">
       {
@@ -136,29 +135,3 @@ gap-6: khoảng cách giữa các item là 1.5rem */
   
 };
  
-// Icon: cỡ chữ rất lớn (5xl) và margin-bottom 1rem
-
-<<<<<<< HEAD
-
-export default Services;
-=======
-// Tên dịch vụ:
->>>>>>> b47b8be (giaodienHDSD)
-
-// text-xl: cỡ chữ lớn
-
-// font-semibold: chữ semi-bold
-
-// mb-3: margin-bottom 0.75rem
-
-// text-gray-800: màu chữ xám đậm
-
-// Mô tả:
-
-// text-gray-600: màu chữ xám nhạt hơn
-
-// text-sm: cỡ chữ nhỏ
-
-// leading-relaxed: khoảng cách dòng thoáng hơn
-
-export default ServicesSection; //Xuất component để sử dụng ở nơi khác
