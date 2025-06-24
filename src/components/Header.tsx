@@ -20,7 +20,7 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 h-[72px] flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 h-[100px] flex items-center justify-between">
 
         
         {/* Logo được cố định kích thước không làm giãn header */}
