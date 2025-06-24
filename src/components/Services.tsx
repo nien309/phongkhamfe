@@ -134,4 +134,4 @@ gap-6: khoảng cách giữa các item là 1.5rem */
   );
   
 };
- 
+export default Services;
