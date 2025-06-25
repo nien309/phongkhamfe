@@ -25,14 +25,15 @@ const services = [
     icon: '👨‍⚕️',
   },
   {
-    title: 'X - Quang',
-    description: 'Sử dụng tia X để tạo hình ảnh xương và một số mô đặc. ',
-    
+    id: 4,
+    name: 'X - Quang',
+    desc: 'Sử dụng tia X để tạo hình ảnh xương và một số mô đặc. ',
     icon: '🩻',
   },
   {
-    title: 'Siêu Âm',
-    description: 'Dùng sóng âm tần số cao để quan sát cơ quan nội tạng, mô mềm.',
+    id: 5,
+    name: 'Siêu Âm',
+    desc: 'Dùng sóng âm tần số cao để quan sát cơ quan nội tạng, mô mềm.',
     icon: '📡',
   },
 ];
@@ -40,7 +41,7 @@ const services = [
 const Services = () => {
   
   return (
-    <section id="services" className="py-16 bg-slate-50">
+    <section id="servicesSection" className="py-16 bg-slate-50">
       {
       
       /* <section>: Thẻ HTML5 cho một section

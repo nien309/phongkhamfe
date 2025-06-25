@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, User } from 'lucide-react';
+import AuthForm from './ui/AuthForm'; // ✅ Import AuthForm
 
 const navItems = [
   { label: 'TRANG CHỦ', href: '/' },
@@ -17,13 +18,12 @@ const navItems = [
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showAuthForm, setShowAuthForm] = useState(false); // ✅ State cho modal
 
   return (
     <header className="bg-white shadow sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 h-[100px] flex items-center justify-between">
-
-        
-        {/* Logo được cố định kích thước không làm giãn header */}
+        {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
           <div className="h-[100px] w-[100px] relative overflow-hidden">
             <Image
@@ -34,7 +34,6 @@ export default function Header() {
             />
           </div>
         </Link>
-
 
         {/* Menu desktop */}
         <nav className="hidden md:flex items-center space-x-6 text-gray-700 text-sm">
@@ -57,12 +56,17 @@ export default function Header() {
             {showMenu && (
               <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 bg-white border rounded shadow-md w-40 z-50">
                 <div className="flex flex-col">
-                  
-                  <button className="px-4 py-2 text-sm text-center text-black hover:bg-gray-100">
-                    ĐĂNG NHẬP
+                  <button
+                    onClick={() => {
+                      setShowAuthForm(true);
+                      setShowMenu(false);
+                    }}
+                    className="px-4 py-2 text-sm text-center text-black hover:bg-gray-100"
+                  >
+                    Đăng Nhập
                   </button>
                   <button className="px-4 py-2 text-sm text-center text-black hover:bg-gray-100">
-                    ĐĂNG XUẤT
+                    Đăng Xuất
                   </button>
                 </div>
               </div>
@@ -97,10 +101,13 @@ export default function Header() {
 
             {/* User menu on mobile */}
             <div className="flex flex-col gap-2 mt-4">
-              <button className="bg-gray-100 text-black px-3 py-1 rounded text-sm hover:bg-gray-200">
-                Đăng ký
-              </button>
-              <button className="bg-gray-100 text-black px-3 py-1 rounded text-sm hover:bg-gray-200">
+              <button
+                onClick={() => {
+                  setShowAuthForm(true);
+                  setIsOpen(false);
+                }}
+                className="bg-gray-100 text-black px-3 py-1 rounded text-sm hover:bg-gray-200"
+              >
                 Đăng nhập
               </button>
               <button className="bg-gray-100 text-black px-3 py-1 rounded text-sm hover:bg-gray-200">
@@ -108,6 +115,21 @@ export default function Header() {
               </button>
             </div>
           </nav>
+        </div>
+      )}
+
+      {/* Modal AuthForm */}
+      {showAuthForm && (
+        <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow-lg w-[400px] max-w-full relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              onClick={() => setShowAuthForm(false)}
+            >
+              ✖
+            </button>
+            <AuthForm />
+          </div>
         </div>
       )}
     </header>
