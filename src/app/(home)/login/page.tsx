@@ -34,18 +34,35 @@
 // }
 
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useAuth } from '@/context/AuthContext'
+import { useRouter } from 'next/navigation'
 
 export default function AdminLoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
+  const {login, user, isLoading}= useAuth()
+  const router = useRouter()
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     // Gửi thông tin đăng nhập đến API
+    login({ email, matkhau: password })
+  }
+ useEffect(() => {
+    if (!isLoading && user) {
+      router.push('/');
+    }
+  }, [user, isLoading, router]);
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
+  if (user) {
+    // Show loading state while redirecting
+    return <div className="flex items-center justify-center min-h-screen">Redirecting...</div>;
+  }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form 

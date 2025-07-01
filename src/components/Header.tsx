@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, User } from 'lucide-react';
 import AuthForm from './ui/AuthForm'; // ✅ Import AuthForm
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const navItems = [
   { label: 'TRANG CHỦ', href: '/' },
@@ -19,7 +21,8 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showAuthForm, setShowAuthForm] = useState(false); // ✅ State cho modal
-
+  const {user, logout}  = useAuth(); // ✅ Import useAuth hook
+  const router = useRouter();
   return (
     <header className="bg-white shadow sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 h-[100px] flex items-center justify-between">
@@ -54,23 +57,43 @@ export default function Header() {
             </button>
 
             {showMenu && (
+              user ? (
+                <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 bg-white border rounded shadow-md w-40 z-50">
+                  <div className="flex flex-col">
+                    <Link
+                      href="/profile"
+                      className="px-4 py-2 text-sm text-center text-black hover:bg-gray-100"
+                      onClick={() => setShowMenu(false)}
+                    >
+                      Hồ Sơ
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout(); // ✅ Gọi hàm logout từ useAuth
+                        // Xử lý đăng xuất ở đây
+                        setShowMenu(false);
+                      }}
+                      className="px-4 py-2 text-sm text-center text-black hover:bg-gray-100 cursor-pointer"
+                    >
+                      Đăng Xuất
+                    </button>
+                  </div>
+                </div>
+              ) : (
               <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 bg-white border rounded shadow-md w-40 z-50">
                 <div className="flex flex-col">
                   <button
                     onClick={() => {
-                      setShowAuthForm(true);
-                      setShowMenu(false);
+                      router.push('/login'); // Chuyển hướng đến trang đăng nhập
                     }}
-                    className="px-4 py-2 text-sm text-center text-black hover:bg-gray-100"
+                    className="px-4 py-2 text-sm text-center text-black hover:bg-gray-100 cursor-pointer"
                   >
                     Đăng Nhập
                   </button>
-                  <button className="px-4 py-2 text-sm text-center text-black hover:bg-gray-100">
-                    Đăng Xuất
-                  </button>
+                 
                 </div>
               </div>
-            )}
+            ))}
           </div>
         </nav>
 
