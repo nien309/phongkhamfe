@@ -14,6 +14,7 @@ const menuItems = [
   { label: "Ca khám", icon: ClipboardList, href: "/admin/ca-kham" },
   { label: "Toa thuốc", icon: FilePlus2, href: "/admin/toa-thuoc" },
   { label: "Hóa đơn", icon: Receipt, href: "/admin/hoa-don" },
+  { label: "Dịch vụ", icon: Receipt, href: "/admin/dich-vu" },
 ];
 
 export default function Sidebar() {

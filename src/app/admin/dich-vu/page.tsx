@@ -2,26 +2,33 @@
 
 import { useState, useEffect } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
-import { Khoa } from "@/types/khoa";
-import { khoaApi } from "@/lib/api/khoa";
+import { DichVu } from "@/types/dichvu";
+import { dichVuApi } from "@/lib/api/dichvu";
 import { toast } from "react-hot-toast";
-import KhoaFormDialog from "@/components/khoa/KhoaFormDialog";
+import DichVuFormDialog from "@/components/dichvu/DichVuFormDialog";
+import { khoaApi } from "@/lib/api/khoa";
+import { Khoa } from "@/types/khoa";
 
-export default function DepartmentPage() {
-  const [modal, setModal] = useState<null | { type: string; khoa?: Khoa }>(null);
+export default function DichVuPage() {
+  const [modal, setModal] = useState<null | { type: string; dichvu?: DichVu }>(null);
+  const [dichvus, setDichVus] = useState<DichVu[]>([]);
   const [khoas, setKhoas] = useState<Khoa[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchKhoas();
+    fetchData();
   }, []);
 
-  const fetchKhoas = async () => {
+  const fetchData = async () => {
     try {
-      const data = await khoaApi.getAll();
-      setKhoas(data);
+      const [dichvuData, khoaData] = await Promise.all([
+        dichVuApi.getAll(),
+        khoaApi.getAll()
+      ]);
+      setDichVus(dichvuData);
+      setKhoas(khoaData);
     } catch (error) {
-      toast.error("Không thể tải danh sách khoa");
+      toast.error("Không thể tải danh sách dịch vụ");
     } finally {
       setLoading(false);
     }
@@ -29,35 +36,43 @@ export default function DepartmentPage() {
 
   const handleDelete = async (id: number) => {
     try {
-      await khoaApi.delete(id);
-      toast.success("Xóa khoa thành công");
-      fetchKhoas();
+      await dichVuApi.delete(id);
+      toast.success("Xóa dịch vụ thành công");
+      fetchData();
       setModal(null);
     } catch (error) {
-      toast.error("Không thể xóa khoa");
+      toast.error("Không thể xóa dịch vụ");
     }
   };
 
-  const openModal = (type: string, khoa?: Khoa) => {
-    setModal({ type, khoa });
+  const getKhoaName = (id_khoa: number) => {
+    return khoas.find(k => k.id_khoa === id_khoa)?.tenkhoa || "N/A";
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  };
+
+  const openModal = (type: string, dichvu?: DichVu) => {
+    setModal({ type, dichvu });
   };
 
   const closeModal = () => {
     setModal(null);
-    fetchKhoas();
+    fetchData();
   };
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Quản lý khoa</h1>
+        <h1 className="text-2xl font-bold">Quản lý dịch vụ</h1>
         
         <button
           onClick={() => openModal("add")}
           className="flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-sm text-sm"
         >
-          <Plus className="w-4 h-4 mr-1" /> Thêm khoa
+          <Plus className="w-4 h-4 mr-1" /> Thêm dịch vụ
         </button>
       </div>
 
@@ -67,49 +82,51 @@ export default function DepartmentPage() {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-4 py-3 text-left">ID</th>
-              <th className="px-4 py-3 text-left">Tên khoa</th>
+              <th className="px-4 py-3 text-left">Tên dịch vụ</th>
+              <th className="px-4 py-3 text-left">Đơn giá</th>
+              <th className="px-4 py-3 text-left">Khoa</th>
               <th className="px-4 py-3 text-left">Trạng thái</th>
-              <th className="px-4 py-3 text-left">Ngày tạo</th>
               <th className="px-4 py-3 text-center">Hành động</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} className="text-center py-6 text-gray-500">
+                <td colSpan={6} className="text-center py-6 text-gray-500">
                   Đang tải...
                 </td>
               </tr>
-            ) : khoas.length === 0 ? (
+            ) : dichvus.length === 0 ? (
               <tr>
-                <td colSpan={5} className="text-center py-6 text-gray-500">
-                  Không có khoa nào.
+                <td colSpan={6} className="text-center py-6 text-gray-500">
+                  Không có dịch vụ nào.
                 </td>
               </tr>
             ) : (
-              khoas.map((khoa) => (
-                <tr key={khoa.id_khoa} className="border-t hover:bg-gray-50">
-                  <td className="px-4 py-3">{khoa.id_khoa}</td>
-                  <td className="px-4 py-3 font-medium">{khoa.tenkhoa}</td>
+              dichvus.map((dichvu) => (
+                <tr key={dichvu.id_dichvu} className="border-t hover:bg-gray-50">
+                  <td className="px-4 py-3">{dichvu.id_dichvu}</td>
+                  <td className="px-4 py-3 font-medium">{dichvu.tendichvu}</td>
+                  <td className="px-4 py-3">{formatCurrency(dichvu.dongia)}</td>
+                  <td className="px-4 py-3">{getKhoaName(dichvu.id_khoa)}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      khoa.trangthai === "hoatdong"
+                      dichvu.trangthai === "hoatdong"
                         ? "bg-green-100 text-green-800"
                         : "bg-red-100 text-red-800"
                     }`}>
-                      {khoa.trangthai === "hoatdong" ? "Hoạt động" : "Tạm ngưng"}
+                      {dichvu.trangthai === "hoatdong" ? "Hoạt động" : "Tạm ngưng"}
                     </span>
                   </td>
-                  <td className="px-4 py-3">{new Date(khoa.created_at).toLocaleDateString('vi-VN')}</td>
                   <td className="px-4 py-3 text-center space-x-2">
                     <button
-                      onClick={() => openModal("edit", khoa)}
+                      onClick={() => openModal("edit", dichvu)}
                       className="text-yellow-500 hover:text-yellow-600"
                     >
                       <Pencil className="w-4 h-4 inline" />
                     </button>
                     <button
-                      onClick={() => openModal("delete", khoa)}
+                      onClick={() => openModal("delete", dichvu)}
                       className="text-red-500 hover:text-red-600"
                     >
                       <Trash2 className="w-4 h-4 inline" />
@@ -134,17 +151,17 @@ export default function DepartmentPage() {
             </button>
 
             {(modal.type === "add" || modal.type === "edit") && (
-              <KhoaFormDialog 
+              <DichVuFormDialog 
                 closeModal={closeModal} 
-                khoa={modal.type === "edit" ? modal.khoa || null : null} 
+                dichvu={modal.type === "edit" ? modal.dichvu || null : null} 
               />
             )}
 
-            {modal.type === "delete" && modal.khoa && (
+            {modal.type === "delete" && modal.dichvu && (
               <>
-                <h2 className="text-xl font-semibold mb-4">Xóa khoa</h2>
+                <h2 className="text-xl font-semibold mb-4">Xóa dịch vụ</h2>
                 <p className="mb-4">
-                  Bạn có chắc chắn muốn xóa khoa <strong>{modal.khoa.tenkhoa}</strong>? Hành động này không thể hoàn tác.
+                  Bạn có chắc chắn muốn xóa dịch vụ <strong>{modal.dichvu.tendichvu}</strong>? Hành động này không thể hoàn tác.
                 </p>
                 <div className="flex justify-end space-x-2">
                   <button
@@ -154,7 +171,7 @@ export default function DepartmentPage() {
                     Hủy
                   </button>
                   <button
-                    onClick={() => handleDelete(modal.khoa?.id_khoa || 0)}
+                    onClick={() => handleDelete(modal.dichvu?.id_dichvu || 0)}
                     className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
                   >
                     Xác nhận xóa
