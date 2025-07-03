@@ -80,12 +80,14 @@ export default function AccountPage() {
           ))}
         </div>
 
-        <button
+        {/* <button
           onClick={() => openModal("add")}
           className="flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-sm text-sm transition"
         >
           <Plus className="w-4 h-4 mr-1" /> Thêm
-        </button>
+        </button> */}
+
+
       </div>
 
       {/* Table */}

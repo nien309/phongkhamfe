@@ -1,41 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
-
-type Employee = {
-  id: number;
-  name: string;
-  phone: string;
-  role: "Bác sĩ" | "Điều dưỡng" | "Kỹ thuật viên" | "Lễ tân" | "Thu ngân";
-  department?: string;
-  sex: "Nam" | "Nữ";
-  email: string;
-};
-
-const DUMMY_EMPLOYEES: Employee[] = [
-  { id: 1, name: "BS. Nguyễn Văn A", phone: "0901234567", role: "Bác sĩ", department: "Nội tổng quát", sex:"Nam", email:"a@gmail.com" },
-  { id: 2, name: "DS. Trần Thị B", phone: "0912345678", role: "Điều dưỡng", department: "Khoa khám",sex:"Nữ", email:"b@gmail.com" },
-  { id: 3, name: "KS. Lê Văn C", phone: "0923456789", role: "Kỹ thuật viên", department: "Xét nghiệm", sex:"Nam", email:"c@gmail.com" },
-  { id: 4, name: "Nguyễn Thị D", phone: "0934567890", role: "Lễ tân", department: "Tiếp đón",sex:"Nữ", email:"d@gmail.com" },
-  { id: 5, name: "Phạm Văn E", phone: "0945678901", role: "Thu ngân", department: "Tài chính", sex:"Nam", email:"e@gmail.com"},
-];
+import { NhanVien } from "@/types/nhanvien";
+import { nhanvienApi } from "@/lib/api/nhanvien";
+import { toast } from "react-hot-toast";
+import NhanVienFormDialog from "@/components/nhanvien/NhanVienFormDialog";
 
 export default function EmployeePage() {
-  const [activeTab, setActiveTab] = useState<"Tất cả" | Employee["role"]>("Tất cả");
-  const [modal, setModal] = useState<null | { type: string; employee?: Employee }>(null);
+  const [activeTab, setActiveTab] = useState<"Tất cả" | string>("Tất cả");
+  const [modal, setModal] = useState<null | { type: string; employee?: NhanVien }>(null);
+  const [employees, setEmployees] = useState<NhanVien[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+  const fetchEmployees = async () => {
+    try {
+      const data = await nhanvienApi.getAll();
+      setEmployees(data);
+    } catch (error) {
+      toast.error("Không thể tải danh sách nhân viên");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await nhanvienApi.delete(id);
+      toast.success("Xóa nhân viên thành công");
+      fetchEmployees();
+      setModal(null);
+    } catch (error) {
+      console.log(error)
+      toast.error("Không thể xóa nhân viên");
+    }
+  };
 
   const filteredEmployees =
     activeTab === "Tất cả"
-      ? DUMMY_EMPLOYEES
-      : DUMMY_EMPLOYEES.filter((emp) => emp.role === activeTab);
+      ? employees
+      : employees.filter((emp) => emp.chucvu === activeTab);
 
-  const openModal = (type: string, employee?: Employee) => {
+  const openModal = (type: string, employee?: NhanVien) => {
     setModal({ type, employee });
   };
 
   const closeModal = () => {
     setModal(null);
+    fetchEmployees();
   };
 
   return (
@@ -43,11 +59,10 @@ export default function EmployeePage() {
       {/* Tabs */}
       <div className="flex justify-between items-center mb-6">
         <div className="flex flex-wrap gap-2">
-            
           {["Tất cả", "Bác sĩ", "Điều dưỡng", "Kỹ thuật viên", "Lễ tân", "Thu ngân"].map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab as any)}
+              onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                 activeTab === tab
                   ? "bg-blue-600 text-white"
@@ -80,7 +95,13 @@ export default function EmployeePage() {
             </tr>
           </thead>
           <tbody>
-            {filteredEmployees.length === 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan={5} className="text-center py-6 text-gray-500">
+                  Đang tải...
+                </td>
+              </tr>
+            ) : filteredEmployees.length === 0 ? (
               <tr>
                 <td colSpan={5} className="text-center py-6 text-gray-500">
                   Không có nhân viên nào.
@@ -88,11 +109,11 @@ export default function EmployeePage() {
               </tr>
             ) : (
               filteredEmployees.map((emp) => (
-                <tr key={emp.id} className="border-t">
-                  <td className="px-4 py-3">{emp.id}</td>
-                  <td className="px-4 py-3">{emp.name}</td>
-                  <td className="px-4 py-3">{emp.phone}</td>
-                  <td className="px-4 py-3">{emp.role}</td>
+                <tr key={emp.id_nhanvien} className="border-t">
+                  <td className="px-4 py-3">{emp.id_nhanvien}</td>
+                  <td className="px-4 py-3">{emp.taikhoan.hoten}</td>
+                  <td className="px-4 py-3">{emp.taikhoan.sdt}</td>
+                  <td className="px-4 py-3">{emp.chucvu}</td>
                   <td className="px-4 py-3 text-center space-x-2">
                     <button
                       onClick={() => openModal("detail", emp)}
@@ -131,186 +152,20 @@ export default function EmployeePage() {
               ✕
             </button>
 
-            {/* Detail */}
-            {modal.type === "detail" && modal.employee && (
-              <>
-                <h2 className="text-xl font-semibold mb-4">Chi tiết nhân viên</h2>
-                <div className="space-y-2 text-sm">
-                  <p><strong>ID:</strong> {modal.employee.id}</p>
-                  <p><strong>Tên:</strong> {modal.employee.name}</p>
-                  <p><strong>SĐT:</strong> {modal.employee.phone}</p>
-                  <p><strong>Chức vụ:</strong> {modal.employee.role}</p>
-                  <p><strong>Khoa:</strong> {modal.employee.department ?? "Chưa cập nhật"}</p>
-                  <p><strong>Giới tính:</strong> {modal.employee.sex}</p>
-                  <p><strong>Email:</strong> {modal.employee.email}</p>
-                  
-                
-                </div>
-              </>
+            {(modal.type === "add" || modal.type === "edit") && (
+              <NhanVienFormDialog
+                closeModal={closeModal}
+                employee={modal.type === "edit" && modal.employee ? modal.employee : null}
+              />
             )}
-
-            {/* Add / Edit logic giống ví dụ của bạn, có thể tái sử dụng hoặc mở rộng thêm */}
-            {modal.type === "add" && (
-  <>
-    <h2 className="text-xl font-semibold mb-4">Thêm tài khoản</h2>
-    <form
-      className="space-y-4"
-      onSubmit={(e) => {
-        e.preventDefault();
-        alert("Đã thêm tài khoản (demo)");
-        closeModal();
-      }}
-    >
-      <div>
-        <label className="block text-sm font-medium mb-1">Tên</label>
-        <input
-          type="text"
-          required
-          className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Nhập tên"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">Email</label>
-        <input
-          type="email"
-          required
-          className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Nhập email"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">SĐT</label>
-        <input
-          type="tel"
-          required
-          className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Nhập sđt"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">Giới tính</label>
-        <select
-          required
-          className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">-- Chọn giới tính --</option>
-          <option value="Nam">Nam</option>
-          <option value="Nữ">Nữ</option>
-          
-        
-        </select>
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">Chức vụ</label>
-        <select
-          required
-          className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">-- Chọn chức vụ --</option>
-          <option value="bacsi">Bác sĩ</option>
-          <option value="dieuduong">Điều dưỡng</option>
-          <option value="ktv">Kỹ thuật viên</option>
-          <option value="letan">Lễ tân</option>
-          <option value="thungan">Thu ngân</option>
-        
-        </select>
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">Ảnh đại diện</label>
-        <input
-            type="file"
-            accept="image/*"
-            className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        </div>
-
-      <div className="flex justify-end space-x-2 pt-2">
-        <button
-          type="button"
-          onClick={closeModal}
-          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition"
-        >
-          Hủy
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          Lưu
-        </button>
-      </div>
-    </form>
-  </>
-)}
-
-{modal.type === "edit" && modal.employee && (
-  <>
-    <h2 className="text-xl font-semibold mb-4">Sửa tài khoản</h2>
-    <form
-      className="space-y-4"
-      onSubmit={(e) => {
-        e.preventDefault();
-        alert("Đã cập nhật tài khoản (demo)");
-        closeModal();
-      }}
-    >
-      <div>
-        <label className="block text-sm font-medium mb-1">Tên</label>
-        <input
-          type="text"
-          defaultValue={modal.employee.name}
-          required
-          className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">Email</label>
-        <input
-          type="email"
-          defaultValue={modal.employee.email}
-          required
-          className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">Chức vụ</label>
-        <select
-          defaultValue={modal.employee.role}
-          required
-          className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-         <option value="bacsi">Bác sĩ</option>
-          <option value="dieuduong">Điều dưỡng</option>
-          <option value="ktv">Kỹ thuật viên</option>
-          <option value="letan">Lễ tân</option>
-          <option value="thungan">Thu ngân</option>
-        
-        </select>
-      </div>
-      <div className="flex justify-end space-x-2 pt-2">
-        <button
-          type="button"
-          onClick={closeModal}
-          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition"
-        >
-          Hủy
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          Cập nhật
-        </button>
-      </div>
-    </form>
-  </>
-)}
 
             {modal.type === "delete" && modal.employee && (
               <>
-                <h2 className="text-xl font-semibold mb-4">Xoá tài khoản</h2>
-                <p>Bạn có chắc chắn muốn xoá tài khoản <strong>{modal.employee.name}</strong>?</p>
+                <h2 className="text-xl font-semibold mb-4">Xoá nhân viên</h2>
+                <p>
+                  Bạn có chắc chắn muốn xoá nhân viên{" "}
+                  <strong>{modal.employee.taikhoan.hoten}</strong>?
+                </p>
                 <div className="flex justify-end mt-4 space-x-2">
                   <button
                     onClick={closeModal}
@@ -319,10 +174,7 @@ export default function EmployeePage() {
                     Hủy
                   </button>
                   <button
-                    onClick={() => {
-                      alert("Tài khoản đã bị xoá (demo)");
-                      closeModal();
-                    }}
+                    onClick={() => handleDelete(modal.employee?.id_nhanvien || 0)}
                     className="px-4 py-2 bg-red-500 text-white rounded"
                   >
                     Xoá
@@ -331,6 +183,27 @@ export default function EmployeePage() {
               </>
             )}
 
+            {modal.type === "detail" && modal.employee && (
+              <>
+                <h2 className="text-xl font-semibold mb-4">Chi tiết nhân viên</h2>
+                <div className="space-y-2">
+                  <p><strong>ID:</strong> {modal.employee.id_nhanvien}</p>
+                  <p><strong>Tên:</strong> {modal.employee.taikhoan.hoten}</p>
+                  <p><strong>Email:</strong> {modal.employee.taikhoan.email}</p>
+                  <p><strong>Giới tính:</strong> {modal.employee.taikhoan.gioitinh}</p>
+                  <p><strong>Ngày sinh:</strong> {modal.employee.taikhoan.ngaysinh}</p>
+                  <p><strong>Địa chỉ:</strong> {modal.employee.taikhoan.diachi}</p>
+                  <p><strong>Số điện thoại:</strong> {modal.employee.taikhoan.sdt}</p>
+                  <p><strong>Chức vụ:</strong> {modal.employee.chucvu}</p>
+                  <p><strong>Lương:</strong> {modal.employee.luong.toLocaleString('vi-VN')} VNĐ</p>
+                  <p><strong>Khoa:</strong> {modal.employee.id_khoa}</p>
+                  <p>
+                    <strong>Trạng thái:</strong>{" "}
+                    {modal.employee.taikhoan.trangthai === "active" ? "Hoạt động" : "Không hoạt động"}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
