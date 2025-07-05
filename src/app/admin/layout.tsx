@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && user?.loai_taikhoan !== 'admin') {
+    if (!isLoading && user?.loai_taikhoan !== 'admin' && user?.loai_taikhoan !== 'nhanvien') {
       router.push('/');
     }
   }, [user, isLoading, router]);
@@ -19,7 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
-  if (user?.loai_taikhoan !== 'admin') {
+  if (user?.loai_taikhoan !== 'admin' && user?.loai_taikhoan !== 'nhanvien') {
     // Show loading state while redirecting
     return <div className="flex items-center justify-center min-h-screen">Redirecting...</div>;
   }

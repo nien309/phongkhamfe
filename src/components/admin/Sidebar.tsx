@@ -10,6 +10,8 @@ const menuItems = [
   { label: "Nhân viên", icon: Users, href: "/admin/nhan-vien" },
   { label: "Khách hàng", icon: Users, href: "/admin/khach-hang" },
   { label: "Lịch làm việc", icon: CalendarDays, href: "/admin/lich-lam-viec" },
+  { label: "Lịch đăng ký làm việc", icon: CalendarDays, href: "/admin/lich-dky-lamviec" },
+  { label: "Bệnh án", icon: FileText, href: "/admin/benh-an" },
   { label: "Khoa", icon: Stethoscope, href: "/admin/khoa" },
   { label: "Ca khám", icon: ClipboardList, href: "/admin/ca-kham" },
   { label: "Toa thuốc", icon: FilePlus2, href: "/admin/toa-thuoc" },
