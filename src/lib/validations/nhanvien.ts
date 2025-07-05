@@ -6,8 +6,8 @@ export const nhanvienSchema = z.object({
   id_khoa: z.number().min(1, "Khoa không được để trống"),
   taikhoan: z.object({
     hoten: z.string().min(1, "Họ tên không được để trống"),
-    matkhau: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự").optional(),
-    matkhau_confirmation: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự").optional(),
+    matkhau: z.string().optional(),
+    matkhau_confirmation: z.string().optional(),
     gioitinh: z.string().min(1, "Giới tính không được để trống"),
     ngaysinh: z.string(),
     diachi: z.string().min(1, "Địa chỉ không được để trống"),

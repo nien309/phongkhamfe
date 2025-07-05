@@ -22,6 +22,7 @@ export default function EmployeePage() {
       const data = await nhanvienApi.getAll();
       setEmployees(data);
     } catch (error) {
+      console.log(error)
       toast.error("Không thể tải danh sách nhân viên");
     } finally {
       setLoading(false);
@@ -33,12 +34,14 @@ export default function EmployeePage() {
       await nhanvienApi.delete(id);
       toast.success("Xóa nhân viên thành công");
       fetchEmployees();
-      setModal(null);
+       setModal(null);
     } catch (error) {
       console.log(error)
       toast.error("Không thể xóa nhân viên");
     }
   };
+
+ 
 
   const filteredEmployees =
     activeTab === "Tất cả"
@@ -167,18 +170,20 @@ export default function EmployeePage() {
                   <strong>{modal.employee.taikhoan.hoten}</strong>?
                 </p>
                 <div className="flex justify-end mt-4 space-x-2">
+                <button
+                    onClick={() => handleDelete(modal.employee?.id_nhanvien || 0)}
+                    className="px-4 py-2 bg-red-500 text-white rounded"
+                  >
+                    Có
+                  </button>
+
                   <button
                     onClick={closeModal}
                     className="px-4 py-2 bg-gray-300 rounded"
                   >
-                    Hủy
+                    Không
                   </button>
-                  <button
-                    onClick={() => handleDelete(modal.employee?.id_nhanvien || 0)}
-                    className="px-4 py-2 bg-red-500 text-white rounded"
-                  >
-                    Xoá
-                  </button>
+                 
                 </div>
               </>
             )}

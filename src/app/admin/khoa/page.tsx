@@ -21,6 +21,7 @@ export default function DepartmentPage() {
       const data = await khoaApi.getAll();
       setKhoas(data);
     } catch (error) {
+      console.log(error)
       toast.error("Không thể tải danh sách khoa");
     } finally {
       setLoading(false);
@@ -34,9 +35,13 @@ export default function DepartmentPage() {
       fetchKhoas();
       setModal(null);
     } catch (error) {
-      toast.error("Không thể xóa khoa");
+      console.log(error)
+      toast.error("Không thể xoá khoa này vì vẫn còn nhân viên hoặc dịch vụ liên quan");
     }
   };
+
+ 
+  
 
   const openModal = (type: string, khoa?: Khoa) => {
     setModal({ type, khoa });
