@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { ProfileForm } from "@/components/ui/ProfileForm";
+import { ProfileForm } from "@/components/hoso/ProfileForm";
 import { User } from "@/types/user";
 import { userApi } from "@/lib/api/user";
 

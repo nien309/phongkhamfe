@@ -109,6 +109,7 @@ fetchKhoas()
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-4"
         >
+             {!employee && (
           <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -138,6 +139,7 @@ fetchKhoas()
             )}
           />
           </div>
+             )}
           {!employee && (
             <>
               <FormField
@@ -177,7 +179,7 @@ fetchKhoas()
               />
             </>
           )}
-
+   {!employee && (
           <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -215,7 +217,8 @@ fetchKhoas()
               )}
             />
           </div>
-
+   )}
+      {!employee && (
           <FormField
             control={form.control}
             name="taikhoan.diachi"
@@ -229,7 +232,8 @@ fetchKhoas()
               </FormItem>
             )}
           />
-
+          )}
+             {!employee && (
           <FormField
             control={form.control}
             name="taikhoan.sdt"
@@ -243,7 +247,7 @@ fetchKhoas()
               </FormItem>
             )}
           />
-
+          )}
           <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
