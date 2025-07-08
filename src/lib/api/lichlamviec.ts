@@ -9,6 +9,15 @@ export const lichlamviecApi = {
   
   getAll: async () => {
     const response = await apiClient.get("/api/lich-dang-ky")
+    return response.data.data
+  },
+
+  updateDuyetLichLamViec: async (id: number, data: { trangthai: string }) => {
+    const response = await apiClient.put(`/api/lich-dang-ky/${id}`, data)
     return response.data
   },
+  getById: async (id: number) => {
+    const response = await apiClient.get(`/api/lich-dang-ky/${id}`)
+    return response.data
+  }
 }
