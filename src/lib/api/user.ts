@@ -1,6 +1,6 @@
 import { apiClient } from "../axios-client"
 import { User } from "@/types/user"
-import { UserFormValues } from "../validations/user"
+import { RegisterFormValues, UserFormValues } from "../validations/user"
 
 const API_ENDPOINT = "/api/admin/taikhoan"
 
@@ -28,5 +28,10 @@ export const userApi = {
 
   delete: async (id: string) => {
     await apiClient.delete(`${API_ENDPOINT}/${id}`)
+  },
+
+  register: async (data: RegisterFormValues) => {
+    const response = await apiClient.post(`/api/register`, data)
+    return response.data
   }
 } 

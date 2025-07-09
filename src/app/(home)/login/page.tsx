@@ -93,10 +93,17 @@ export default function AdminLoginForm() {
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+          <div className="flex justify-between">
+          <div className="text-left">
+            <Link href="/register" className="text-sm text-blue-600 hover:underline">
+              Đăng ký
+            </Link>
+          </div>
           <div className="text-right">
             <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
               Quên mật khẩu?
             </Link>
+          </div>
           </div>
         </div>
 

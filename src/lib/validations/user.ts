@@ -32,5 +32,18 @@ export const userSchemaWithoutPassword = z.object({
     loai_taikhoan: z.string().min(1, "Loại tài khoản không được để trống"),
     phan_quyen: z.string().optional()
   })
+
+export const registerSchema = z.object({
+  hoten: z.string().min(1, "Họ tên không được để trống"),
+  matkhau: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+  matkhau_confirmation: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+  sdt: z.string().min(10, "Số điện thoại không hợp lệ"),
+  gioitinh: z.string().min(1, "Giới tính không được để trống"),
+  email: z.string().email("Email không hợp lệ"),
+  ngaysinh: z.string(),
+  nghenghiep: z.string().min(1, "Nghe nghiệp không được để trống"),
+  diachi: z.string().min(1, "Địa chỉ không được để trống"),
+})
 export type UserSchemaWithoutPassword = z.infer<typeof userSchemaWithoutPassword>
 export type UserFormValues = z.infer<typeof userSchema> 
+export type RegisterFormValues = z.infer<typeof registerSchema>
