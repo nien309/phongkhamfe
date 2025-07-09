@@ -16,7 +16,6 @@ export default function EmployeePage() {
   useEffect(() => {
     fetchEmployees();
   }, []);
-
   const fetchEmployees = async () => {
     try {
       const data = await nhanvienApi.getAll();
@@ -62,7 +61,7 @@ export default function EmployeePage() {
       {/* Tabs */}
       <div className="flex justify-between items-center mb-6">
         <div className="flex flex-wrap gap-2">
-          {["Tất cả", "Bác sĩ", "Điều dưỡng", "Kỹ thuật viên", "Lễ tân", "Thu ngân"].map((tab) => (
+          {["Tất cả", "bacsi", "dieuduong", "kythuatvien", "letan", "thungan"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}

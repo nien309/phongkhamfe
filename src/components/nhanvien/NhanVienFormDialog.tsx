@@ -50,7 +50,7 @@ fetchKhoas()
     resolver: zodResolver(nhanvienSchema),
     defaultValues: {
       chucvu: employee?.chucvu || "",
-      luong: employee?.luong || 0,
+      luong: Number(employee?.luong) || 0,
       id_khoa: employee?.id_khoa || 1,
       taikhoan: {
         hoten: employee?.taikhoan.hoten || "",

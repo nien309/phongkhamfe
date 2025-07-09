@@ -6,7 +6,6 @@ import TaiKhoanFormDialog from "@/components/taikhoan/TaiKhoanFormDialog";
 import { User } from "@/types/user";
 import { userApi } from "@/lib/api/user";
 import { toast } from "react-hot-toast";
-import { cleanRegex } from "node_modules/zod/dist/types/v4/core/util";
 import TaiKhoanEditFormDialog from "@/components/taikhoan/TaiKhoanEditFormDialog";
 
 export default function AccountPage() {
@@ -45,8 +44,6 @@ export default function AccountPage() {
     activeTab === "all"
       ? accounts
       : accounts.filter((acc) => acc.loai_taikhoan === activeTab);
-  console.log(accounts);
-  console.log(activeTab);
   const openModal = (type: string, account?: User) => {
     setModal({ type, account });
   };
@@ -122,7 +119,7 @@ export default function AccountPage() {
                   <td className="px-4 py-3">{acc.hoten}</td>
                   <td className="px-4 py-3">{acc.email}</td>
                   <td className="px-4 py-3">
-                    {acc.loai_taikhoan === "employee" ? "Nhân viên" : "Khách hàng"}
+                    {acc.loai_taikhoan === "nhanvien" ? "Nhân viên" : "Khách hàng"}
                   </td>
                   <td className="px-4 py-3 text-center space-x-2">
                     <button
