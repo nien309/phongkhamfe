@@ -6,7 +6,7 @@ const API_ENDPOINT = "/api/admin/khoas"
 
 export const khoaApi = {
   getAll: async () => {
-    const response = await apiClient.get<Khoa[]>(API_ENDPOINT)
+    const response = await apiClient.get<Khoa[]>("/api/khoas")
     return response.data
   },
 

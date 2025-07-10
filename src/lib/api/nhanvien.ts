@@ -15,7 +15,10 @@ export const nhanvienApi = {
     const response = await apiClient.get<NhanVien>(`${API_ENDPOINT}/${id}`)
     return response.data
   },
-
+  getBacSiDangRanh: async (id: number, cakham: number, ngayhen: string) => {
+    const response = await apiClient.get<NhanVien[]>(`/api/khoa/${id}/bac-si-lich-ranh?id_cakham=${cakham}&ngayhen=${ngayhen}`)
+    return response.data
+  },
   create: async (data: NhanVienFormValues) => {
     const response = await apiClient.post<NhanVien>(API_ENDPOINT, data)
     return response.data
