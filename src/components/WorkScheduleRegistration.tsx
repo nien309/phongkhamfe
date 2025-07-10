@@ -132,7 +132,7 @@ const WorkScheduleRegistration = () => {
       setSelectedDates([]);
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error("Có lỗi xảy ra. Vui lòng thử lại");
+      toast.error("Bạn không có quyền đăng ký lịch làm việc");
     }
   };
 

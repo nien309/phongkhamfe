@@ -12,9 +12,18 @@ export default function CustomerPage() {
   const [khachhangs, setKhachhangs] = useState<KhachHang[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [filteredSearch, setFilteredSearch] = useState<KhachHang[] | null>(null);
+
   useEffect(() => {
     fetchKhachhangs();
   }, []);
+
+  useEffect(() => {
+    if (searchKeyword.trim() === "") {
+      setFilteredSearch(null);
+    }
+  }, [searchKeyword]);
 
   const fetchKhachhangs = async () => {
     try {
@@ -40,6 +49,17 @@ export default function CustomerPage() {
     }
   };
 
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const keyword = searchKeyword.toLowerCase().trim();
+      const filtered = khachhangs.filter((kh) =>
+        kh.taikhoan.hoten.toLowerCase().includes(keyword) ||
+        kh.taikhoan.sdt.includes(keyword)
+      );
+      setFilteredSearch(filtered);
+    }
+  };
+
   const openModal = (type: string, khachhang?: KhachHang) => {
     setModal({ type, khachhang });
   };
@@ -51,14 +71,26 @@ export default function CustomerPage() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
         <h1 className="text-2xl font-semibold">Quản lý khách hàng</h1>
-        <button
-          onClick={() => openModal("add")}
-          className="flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-sm text-sm"
-        >
-          <Plus className="w-4 h-4 mr-1" /> Thêm khách hàng
-        </button>
+
+        <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+          <input
+            type="text"
+            placeholder="Tìm theo họ tên hoặc số điện thoại..."
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
+            className="w-full md:w-72 px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+
+          <button
+            onClick={() => openModal("add")}
+            className="flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-sm text-sm whitespace-nowrap"
+          >
+            <Plus className="w-4 h-4 mr-1" /> Thêm khách hàng
+          </button>
+        </div>
       </div>
 
       <div className="overflow-x-auto border rounded-lg shadow-sm">
@@ -81,14 +113,14 @@ export default function CustomerPage() {
                   Đang tải...
                 </td>
               </tr>
-            ) : khachhangs.length === 0 ? (
+            ) : (filteredSearch ?? khachhangs).length === 0 ? (
               <tr>
                 <td colSpan={7} className="text-center py-6 text-gray-500">
                   Không có khách hàng nào.
                 </td>
               </tr>
             ) : (
-              khachhangs.map((kh) => (
+              (filteredSearch ?? khachhangs).map((kh) => (
                 <tr key={kh.id_khachhang} className="border-t">
                   <td className="px-4 py-3">{kh.id_khachhang}</td>
                   <td className="px-4 py-3">{kh.taikhoan.hoten}</td>
@@ -98,12 +130,12 @@ export default function CustomerPage() {
                   <td className="px-4 py-3">
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        kh.taikhoan.trangthai === 'active'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
+                        kh.taikhoan.trangthai === "active"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
                       }`}
                     >
-                      {kh.taikhoan.trangthai === 'active' ? 'Hoạt động' : 'Không hoạt động'}
+                      {kh.taikhoan.trangthai === "active" ? "Hoạt động" : "Không hoạt động"}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-center space-x-2">
@@ -158,19 +190,18 @@ export default function CustomerPage() {
                   Bạn có chắc chắn muốn xóa khách hàng này không?
                 </p>
                 <div className="flex justify-end mt-6 space-x-3">
-                <button
+                  <button
                     onClick={() => handleDelete(modal.khachhang?.id_khachhang || 0)}
-                    className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
                   >
                     Có
                   </button>
                   <button
                     onClick={closeModal}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
                   >
                     Không
                   </button>
-                  
                 </div>
               </>
             )}
@@ -185,18 +216,18 @@ export default function CustomerPage() {
                   <p><strong>Giới tính:</strong> {modal.khachhang.taikhoan.gioitinh}</p>
                   <p><strong>Ngày sinh:</strong> {modal.khachhang.taikhoan.ngaysinh}</p>
                   <p><strong>Địa chỉ:</strong> {modal.khachhang.taikhoan.diachi}</p>
-                  <p><strong>Số điện thoại:</strong> {modal.khachhang.taikhoan.sdt}</p>
+                  <p><strong>SĐT:</strong> {modal.khachhang.taikhoan.sdt}</p>
                   <p><strong>Nghề nghiệp:</strong> {modal.khachhang.nghenghiep}</p>
                   <p>
                     <strong>Trạng thái:</strong>{" "}
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        modal.khachhang.taikhoan.trangthai === 'active'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
+                        modal.khachhang.taikhoan.trangthai === "active"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
                       }`}
                     >
-                      {modal.khachhang.taikhoan.trangthai === 'active' ? 'Hoạt động' : 'Không hoạt động'}
+                      {modal.khachhang.taikhoan.trangthai === "active" ? "Hoạt động" : "Không hoạt động"}
                     </span>
                   </p>
                 </div>

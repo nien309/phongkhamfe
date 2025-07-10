@@ -93,7 +93,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
                 <div className="space-y-2">
                     <Label htmlFor="gioitinh">Giới tính</Label>
-                    <Select
+                    {/* <Select
                         id="gioitinh"
                         name="gioitinh"
                         value={formData.gioitinh}
@@ -103,7 +103,16 @@ export function ProfileForm({ user }: ProfileFormProps) {
                         <option value="Nam">Nam</option>
                         <option value="Nữ">Nữ</option>
                         <option value="Khác">Khác</option>
-                    </Select>
+                    </Select> */}
+                    <Select
+  id="gioitinh"
+  name="gioitinh"
+  value={formData.gioitinh}
+  disabled
+>
+  <option value={formData.gioitinh}>{formData.gioitinh}</option>
+</Select>
+
                 </div>
 
                 <div className="space-y-2">
