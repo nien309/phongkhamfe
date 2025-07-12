@@ -16,8 +16,11 @@ export interface LichHenResponse {
     id_cakham: number;
     ngayhen: string;
     ghichu: string;
-    khachhang:KhachHang;
-    nhanvien:NhanVien;
+    trangthai: string;
+    khachhang: KhachHang & {
+        hoten: string;
+    };
+    nhanvien: NhanVien;
     cakham: {
         id_cakham: number;
         khunggio: string;

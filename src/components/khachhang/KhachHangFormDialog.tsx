@@ -160,7 +160,7 @@ export default function KhachHangFormDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Giới tính</FormLabel>
-                  <Select value={field.value} onChange={field.onChange}>
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Chọn giới tính" />

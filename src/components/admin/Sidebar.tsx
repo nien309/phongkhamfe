@@ -10,6 +10,7 @@ const menuItems = [
   { label: "Nhân viên", icon: Users, href: "/admin/nhan-vien" },
   { label: "Khách hàng", icon: Users, href: "/admin/khach-hang" },
   { label: "Lịch làm việc", icon: CalendarDays, href: "/admin/lich-lam-viec" },
+  { label: "Lịch hẹn", icon: CalendarDays, href: "/admin/lich-hen" },
   { label: "Duyệt lịch làm việc", icon: CalendarDays, href: "/admin/duyet-lich-lam-viec" },
   { label: "Lịch đăng ký làm việc", icon: CalendarDays, href: "/admin/lich-dky-lamviec" },
   { label: "Bệnh án", icon: FileText, href: "/admin/benh-an" },
