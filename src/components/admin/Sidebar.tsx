@@ -15,6 +15,7 @@ const menuItems = [
   { label: "Duyệt lịch làm việc", icon: CalendarDays, href: "/admin/duyet-lich-lam-viec", restrictedTo: ['bacsi','letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang' ] },
   { label: "Lịch đăng ký làm việc", icon: CalendarDays, href: "/admin/lich-dky-lamviec", restrictedTo: ['letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang'] },
   { label: "Hồ sơ bệnh án", icon: FileText, href: "/admin/ho-so-benh-an", restrictedTo: ['thungan', 'kythuatvien']},
+  { label: "Tạo hồ sơ bệnh án", icon: FileText, href: "/admin/tao-ho-so-benh-an", restrictedTo: ['thungan', 'kythuatvien']},
   { label: "Khoa", icon: Stethoscope, href: "/admin/khoa", restrictedTo: ['bacsi', 'letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang'] },
   { label: "Ca khám", icon: ClipboardList, href: "/admin/ca-kham" ,restrictedTo: ['bacsi', 'letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang']},
   { label: "Toa thuốc", icon: FilePlus2, href: "/admin/toa-thuoc", restrictedTo: ['letan', 'thungan', 'kythuatvien', 'khachhang'] },
