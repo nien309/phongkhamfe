@@ -1,3 +1,5 @@
+import { NhanVien } from "./nhanvien"
+
 export interface User {
     id_taikhoan: string
     hoten: string
@@ -11,5 +13,5 @@ export interface User {
     loai_taikhoan: string
     id_nguoidung: string
     phan_quyen: string
-  // Add other user properties as needed
+    nhanvien?: NhanVien | null
 }

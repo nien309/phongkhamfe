@@ -1,118 +1,184 @@
-// src/app/(home)/dich-vu/page.tsx
+"use client";
 
-import React from 'react';
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { DichVu, DichVuResponse } from "@/types/dichvu";
+import { dichVuApi } from "@/lib/api/dichvu";
+import { toast } from "react-hot-toast";
+import { khoaApi } from "@/lib/api/khoa";
+import { Khoa } from "@/types/khoa";
 
-const DichVuPage = () => {
-  const departments = [
-    'Nội khoa',
-    'Nhi khoa',
-    'Răng hàm mặt',
-    'Da liễu',
-    'Sản phụ khoa',
-    'Tai mũi họng',
-    'Xét nghiệm',
-    'Siêu âm',
-  ];
+export default function DichVuPage() {
+  const [dichvus, setDichVus] = useState<DichVu[]>([]);
+  const [khoas, setKhoas] = useState<Khoa[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [paginationLoading, setPaginationLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [perPage, setPerPage] = useState(10);
 
-  const doctors = [
-    {
-      name: 'BS. Nguyễn Văn A',
-      specialty: 'Nội tổng quát',
-      degree: 'ĐH Y Hà Nội',
-      experience: '15 năm',
-      image: '/images/doctors/nguyenvana.jpg',
-    },
-    {
-      name: 'BS. Trần Thị B',
-      specialty: 'Sản phụ khoa',
-      degree: 'ĐH Y Dược TP.HCM',
-      experience: '12 năm',
-      image: '/images/doctors/tranthib.jpg',
-    },
-    {
-      name: 'BS. Lê Văn C',
-      specialty: 'Nhi khoa',
-      degree: 'ĐH Y Huế',
-      experience: '10 năm',
-      image: '/images/doctors/levanc.jpg',
-    },
-  ];
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  const articles = [
-    {
-      title: 'Cách phòng ngừa cảm cúm hiệu quả',
-      summary: 'Tìm hiểu các biện pháp đơn giản giúp bạn và gia đình tránh khỏi virus cúm mùa.',
-    },
-    {
-      title: 'Chế độ dinh dưỡng cho người cao huyết áp',
-      summary: 'Hướng dẫn xây dựng thực đơn và lối sống lành mạnh để kiểm soát huyết áp ổn định.',
-    },
-    {
-      title: 'Dấu hiệu nhận biết bệnh tiểu đường sớm',
-      summary: 'Những biểu hiện ban đầu thường bị bỏ qua có thể cảnh báo nguy cơ tiểu đường type 2.',
-    },
-  ];
+  useEffect(() => {
+    if (!loading) {
+      handlePaginationChange();
+    }
+  }, [currentPage, perPage]);
+
+  const handlePaginationChange = async () => {
+    setPaginationLoading(true);
+    try {
+      const dichvuData = await dichVuApi.getAll(currentPage, perPage);
+      setDichVus(dichvuData.data);
+      setTotalItems(dichvuData.total);
+      setTotalPages(Math.ceil(dichvuData.total / dichvuData.per_page));
+    } catch (error) {
+      toast.error("Không thể tải danh sách dịch vụ");
+    } finally {
+      setPaginationLoading(false);
+    }
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [dichvuData, khoaData] = await Promise.all([
+        dichVuApi.getAll(currentPage, perPage),
+        khoaApi.getAll()
+      ]);
+      setDichVus(dichvuData.data);
+      setTotalItems(dichvuData.total);
+      setTotalPages(Math.ceil(dichvuData.total / dichvuData.per_page));
+      setKhoas(khoaData);
+    } catch (error) {
+      toast.error("Không thể tải danh sách dịch vụ");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  const handlePerPageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const newPerPage = parseInt(event.target.value);
+    setPerPage(newPerPage);
+    setCurrentPage(1);
+  };
+
+  const getKhoaName = (id_khoa: number) => {
+    return khoas.find(k => k.id_khoa === id_khoa)?.tenkhoa || "N/A";
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  };
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-10 space-y-20">
-      {/* 1. Dịch vụ khám chữa bệnh */}
-      <section>
-        <h2 className="text-3xl font-bold text-blue-800 mb-4">Dịch vụ khám chữa bệnh</h2>
-
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">Chuyên khoa:</h3>
-        <ul className="list-disc list-inside text-gray-700 mb-6">
-          {departments.map((dept, idx) => (
-            <li key={idx}>{dept}</li>
-          ))}
-        </ul>
-
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">Quy trình khám & điều trị:</h3>
-        <p className="text-gray-700 leading-relaxed mb-4">
-          Quy trình bao gồm: đăng ký, tiếp đón, khám lâm sàng, cận lâm sàng (xét nghiệm, siêu âm...), kết luận, kê đơn và hướng dẫn theo dõi sau khám.
+    <div className="p-6 max-w-6xl mx-auto">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-center">Danh Sách Dịch Vụ</h1>
+        <p className="text-gray-600 text-center mt-2">
+          Các dịch vụ y tế chất lượng cao tại phòng khám của chúng tôi
         </p>
+      </div>
 
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">Thiết bị y tế:</h3>
-        <p className="text-gray-700 leading-relaxed">
-          Phòng khám được trang bị máy siêu âm 4D, máy xét nghiệm tự động, máy nội soi tai mũi họng hiện đại... nhằm đảm bảo chẩn đoán chính xác và điều trị hiệu quả.
-        </p>
-      </section>
+      {/* Table */}
+      <div className="overflow-x-auto border rounded-lg shadow-sm bg-white">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-3 text-left">Tên dịch vụ</th>
+              <th className="px-4 py-3 text-left">Đơn giá</th>
+              <th className="px-4 py-3 text-left">Khoa</th>
+            </tr>
+          </thead>
+          <tbody className={paginationLoading ? 'opacity-50' : ''}>
+            {loading ? (
+              <tr>
+                <td colSpan={3} className="text-center py-8">
+                  <div className="flex justify-center items-center">
+                    <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
+                    <span className="ml-2 text-gray-500">Đang tải...</span>
+                  </div>
+                </td>
+              </tr>
+            ) : dichvus.length === 0 ? (
+              <tr>
+                <td colSpan={3} className="text-center py-6 text-gray-500">
+                  Không có dịch vụ nào.
+                </td>
+              </tr>
+            ) : (
+              dichvus.map((dichvu) => (
+                dichvu.trangthai === "hoatdong" && (
+                  <tr key={dichvu.id_dichvu} className="border-t hover:bg-gray-50">
+                    <td className="px-4 py-3 font-medium">{dichvu.tendichvu}</td>
+                    <td className="px-4 py-3">{formatCurrency(dichvu.dongia)}</td>
+                    <td className="px-4 py-3">{getKhoaName(dichvu.id_khoa)}</td>
+                  </tr>
+                )
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
-      {/* 3. Đội ngũ bác sĩ */}
-      <section>
-        <h2 className="text-3xl font-bold text-blue-800 mb-6">Đội ngũ bác sĩ</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {doctors.map((doc, idx) => (
-            <div key={idx} className="bg-white rounded shadow p-4 text-center">
-              <img
-                src={doc.image}
-                alt={doc.name}
-                className="w-24 h-24 mx-auto rounded-full object-cover mb-4"
-              />
-              <h3 className="text-xl font-semibold text-gray-800">{doc.name}</h3>
-              <p className="text-gray-600">{doc.specialty}</p>
-              <p className="text-sm text-gray-500">
-                {doc.degree} – {doc.experience} kinh nghiệm
-              </p>
-            </div>
-          ))}
+      {/* Pagination Controls */}
+      <div className="mt-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-700">Hiển thị</span>
+          <select
+            value={perPage}
+            onChange={handlePerPageChange}
+            className="border rounded px-2 py-1 text-sm"
+            disabled={paginationLoading}
+          >
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+          <span className="text-sm text-gray-700">mục mỗi trang</span>
         </div>
-      </section>
 
-      {/* 6. Giáo dục sức khỏe */}
-      <section>
-        <h2 className="text-3xl font-bold text-blue-800 mb-6">Giáo dục sức khỏe</h2>
-        <div className="space-y-6">
-          {articles.map((article, idx) => (
-            <div key={idx} className="bg-gray-50 p-4 rounded shadow">
-              <h3 className="text-xl font-semibold text-gray-800 mb-1">{article.title}</h3>
-              <p className="text-gray-600">{article.summary}</p>
-            </div>
-          ))}
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-700">
+            {totalItems > 0 ? `${(currentPage - 1) * perPage + 1} - ${Math.min(currentPage * perPage, totalItems)} của ${totalItems}` : '0 kết quả'}
+          </span>
+          <div className="flex gap-1">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1 || paginationLoading}
+              className={`p-2 rounded ${(currentPage === 1 || paginationLoading) ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages || paginationLoading}
+              className={`p-2 rounded ${(currentPage === totalPages || paginationLoading) ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
-      </section>
-    </main>
+      </div>
+
+      {/* Loading Overlay */}
+      {paginationLoading && (
+        <div className="fixed bottom-4 right-4 bg-white rounded-lg shadow-lg px-4 py-2 flex items-center">
+          <Loader2 className="w-4 h-4 animate-spin text-blue-500 mr-2" />
+          <span className="text-sm text-gray-600">Đang tải...</span>
+        </div>
+      )}
+    </div>
   );
-};
-
-export default DichVuPage;
-
+}

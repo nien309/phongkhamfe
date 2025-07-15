@@ -4,23 +4,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import axios, { AxiosResponse } from 'axios'
 import { useRouter } from 'next/navigation'
+import { User } from '@/types/user'
 
-// Types
-interface User {
-    id_taikhoan: string
-    hoten: string
-    matkhau: string
-    gioitinh: string
-    ngaysinh: string
-    diachi: string
-    sdt: string
-    email: string
-    trangthai: string
-    loai_taikhoan: string
-    id_nguoidung: string
-    phan_quyen: string
-  // Add other user properties as needed
-}
 
 interface LoginCredentials {
   email: string
@@ -49,7 +34,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 const LOGIN_URL = `${API_BASE_URL}/api/login`
 // const REGISTER_URL = `${API_BASE_URL}/api/register`
 const LOGOUT_URL = `${API_BASE_URL}/api/logout`
-const GET_USER_URL = (userId: string) => `${API_BASE_URL}/api/admin/taikhoan/${userId}`
+const GET_USER_URL = () => `${API_BASE_URL}/api/taikhoan/me`
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -129,7 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // You might need to decode the token to get userId or have it stored separately
       const userId = getCookie('userId') // Assuming userId is stored in a separate cookie
       if (userId) {
-        await fetchUser(userId)
+        await fetchUser()
       }
     } catch (error) {
       console.error('Auth check failed:', error)
@@ -139,10 +124,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }
 
-  const fetchUser = async (userId: string) => {
+  const fetchUser = async () => {
     try {
-      const response: AxiosResponse<User> = await apiClient.get(GET_USER_URL(userId))
+      const response: AxiosResponse<User> = await apiClient.get(GET_USER_URL())
       setUser(response.data)
+      console.log('User fetched:', response.data)
     } catch (error) {
       console.error('Failed to fetch user:', error)
       setUser(null)
@@ -228,7 +214,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const userId = getCookie('userId')
       if (userId) {
-        await fetchUser(userId)
+        await fetchUser()
       }
     } catch (error) {
       console.error('Failed to refresh user:', error)

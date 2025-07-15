@@ -13,12 +13,13 @@ export default function AdminDashboardPage() {
           Hãy sử dụng thanh điều hướng bên trái để quản lý tài khoản, nhân viên, khách hàng, lịch làm việc, nhiều nội dung khác.
         </p>
 
-        <Button
+        {/* <Button
           onClick={() => toast.success("Chúc bạn làm việc hiệu quả!")}
           className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
         >
           Bắt đầu quản lý
-        </Button>
+        </Button> */}
+        
       </div>
     </div>
   );

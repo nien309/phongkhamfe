@@ -1,6 +1,7 @@
 import { apiClient } from "../axios-client"
 import { NhanVien } from "@/types/nhanvien"
 import { NhanVienFormValues } from "../validations/nhanvien"
+import { BacSi } from "@/types/bacsi"
 
 
 const API_ENDPOINT = "/api/admin/nhanviens"
@@ -17,6 +18,10 @@ export const nhanvienApi = {
   },
   getBacSiDangRanh: async (id: number, cakham: number, ngayhen: string) => {
     const response = await apiClient.get<NhanVien[]>(`/api/khoa/${id}/bac-si-lich-ranh?id_cakham=${cakham}&ngayhen=${ngayhen}`)
+    return response.data
+  },
+  getBacSiByKhoa: async (id: number) => {
+    const response = await apiClient.get<BacSi[]>(`/api/nhanviens/khoas/${id}`)
     return response.data
   },
   create: async (data: NhanVienFormValues) => {

@@ -36,7 +36,7 @@ export default function DepartmentPage() {
       setModal(null);
     } catch (error) {
       console.log(error)
-      toast.error("Không thể xoá khoa này vì vẫn còn nhân viên hoặc dịch vụ liên quan");
+      toast.error("Không thể xoá khoa này vì vẫn còn nhân viên hoặc  liên quan");
     }
   };
 

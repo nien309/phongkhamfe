@@ -1,12 +1,17 @@
 import { apiClient } from "../axios-client"
-import { DichVu } from "@/types/dichvu"
+import { DichVu, DichVuResponse } from "@/types/dichvu"
 import { DichVuFormValues } from "../validations/dichvu"
 
 const API_ENDPOINT = "/api/admin/dichvus"
 
 export const dichVuApi = {
-  getAll: async () => {
-    const response = await apiClient.get<DichVu[]>(API_ENDPOINT)
+  getAll: async (page: number = 1, perPage: number = 10) => {
+    const response = await apiClient.get<DichVuResponse>(API_ENDPOINT, {
+      params: {
+        page,
+        per_page: perPage
+      }
+    })
     return response.data
   },
 
