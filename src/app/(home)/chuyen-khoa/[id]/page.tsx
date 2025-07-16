@@ -11,7 +11,7 @@ interface Props {
         id: string;
     }>;
 }
-
+// chuyen-khoa/[id]/page.tsx
 export default function ChuyenKhoaDetailPage({ params }: Props) {
   const [doctors, setDoctors] = useState<BacSi[]>([])
   const [loading, setLoading] = useState(true)

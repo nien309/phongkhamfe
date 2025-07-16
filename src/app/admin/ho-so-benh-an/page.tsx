@@ -17,14 +17,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -33,6 +25,7 @@ import {
 
 import { hosobenhanApi } from "@/lib/api/hosobenhan"
 import { HosoBenhAn } from "@/types/hosobenhan"
+import { BenhAnFormDialog } from "@/components/benhan/BenhAnFormDialog"
 
 const searchSchema = z.object({
   sdt: z.string().min(10, "Số điện thoại không hợp lệ"),
@@ -68,6 +61,13 @@ export default function HoSoBenhAnPage() {
     return new Date(dateString).toLocaleDateString("vi-VN")
   }
 
+  const handleBenhAnSuccess = async () => {
+    if (hoSoBenhAn) {
+      const response = await hosobenhanApi.findBySdt(hoSoBenhAn.khachhang.taikhoan.sdt)
+      setHoSoBenhAn(response)
+    }
+  }
+
   return (
     <div className="container mx-auto py-10 space-y-8">
       <Card>
@@ -100,8 +100,12 @@ export default function HoSoBenhAnPage() {
 
       {hoSoBenhAn && (
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Thông tin hồ sơ bệnh án</CardTitle>
+            <BenhAnFormDialog 
+              hoSoBenhAnId={hoSoBenhAn.id_hosobenhan}
+              onSuccess={handleBenhAnSuccess}
+            />
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
@@ -121,13 +125,27 @@ export default function HoSoBenhAnPage() {
             </div>
 
             <div className="mt-6">
-              <h3 className="font-semibold mb-4">Lịch sử bệnh án:</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold">Lịch sử bệnh án:</h3>
+              </div>
               <Accordion type="single" collapsible className="w-full">
                 {hoSoBenhAn.benhans.map((benhan, index) => (
                   <AccordionItem key={benhan.id_benhan} value={`item-${index}`}>
-                    <AccordionTrigger>
-                      Bệnh án ngày {formatDate(benhan.ngaybatdau)}
-                    </AccordionTrigger>
+                    <div className="flex items-center justify-between">
+                      <AccordionTrigger className="flex-1">
+                        Bệnh án ngày {formatDate(benhan.ngaybatdau)}
+                      </AccordionTrigger>
+                      <BenhAnFormDialog
+                        hoSoBenhAnId={hoSoBenhAn.id_hosobenhan}
+                        benhAn={benhan}
+                        onSuccess={handleBenhAnSuccess}
+                        trigger={
+                          <Button variant="outline" size="sm" className="mr-4">
+                            Cập nhật
+                          </Button>
+                        }
+                      />
+                    </div>
                     <AccordionContent>
                       <div className="space-y-2 p-4">
                         <p><span className="font-medium">Chẩn đoán:</span> {benhan.chandoan}</p>
