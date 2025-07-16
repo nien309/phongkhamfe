@@ -26,6 +26,7 @@ import {
 import { hosobenhanApi } from "@/lib/api/hosobenhan"
 import { HosoBenhAn } from "@/types/hosobenhan"
 import { BenhAnFormDialog } from "@/components/benhan/BenhAnFormDialog"
+import Link from "next/link"
 
 const searchSchema = z.object({
   sdt: z.string().min(10, "Số điện thoại không hợp lệ"),
@@ -153,6 +154,12 @@ export default function HoSoBenhAnPage() {
                         <p><span className="font-medium">Khoa:</span> {benhan.khoa.tenkhoa}</p>
                         <p><span className="font-medium">Bác sĩ:</span> {benhan.nhanvien.taikhoan.hoten}</p>
                       </div>
+                        <Link href={`/admin/benh-an/${benhan.id_benhan}`}
+                          >
+                             <Button variant="outline" size="sm" className="mr-4">
+                            Xem chi tiết
+                          </Button>
+                          </Link>
                     </AccordionContent>
                   </AccordionItem>
                 ))}
