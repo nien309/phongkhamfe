@@ -7,9 +7,12 @@ const thongTinKhamBenhSchema = z.object({
     trangthai: z.string().min(1, "Trạng thái không được để trống"),
     id_benhan: z.number().min(1, "ID bệnh án không được để trống")
 })
+const updateTTKhamBenhSchema = z.object({
+    trangthai: z.string().min(1, "Trạng thái không được để trống"),
+})
 
 export type CreateThongTinKhamBenhFormValues = z.infer<typeof thongTinKhamBenhSchema>
-export type UpdateThongTinKhamBenhFormValues = Partial<CreateThongTinKhamBenhFormValues>
+export type UpdateThongTinKhamBenhFormValues = z.infer<typeof updateTTKhamBenhSchema>
 
 export const createThongTinKhamBenhSchema = thongTinKhamBenhSchema
-export const updateThongTinKhamBenhSchema = thongTinKhamBenhSchema.partial()
+export const updateThongTinKhamBenhSchema = updateTTKhamBenhSchema

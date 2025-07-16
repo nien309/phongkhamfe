@@ -93,7 +93,13 @@ export default function ThongTinKhamBenhDetailPage() {
     setSelectedChiDinh(chiDinh);
     setOpenChiDinhDialog(true);
   };
-
+  const handleHoanThanh = async () => {
+    try {
+      await thongtinkhamBenhApi.update(Number(params.id_thongtinkhambenh), { trangthai: "da_hoan_thanh" });
+    } catch (error) {
+      console.error("Failed to update thong tin kham benh:", error);
+    }
+  };
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
       case "dang_kham":
@@ -312,7 +318,7 @@ export default function ThongTinKhamBenhDetailPage() {
       )}
       {thongTinKhamBenh.trangthai === "dang_kham" && (
         <div className="flex justify-end">
-          <Button variant="success" size="sm">
+          <Button variant="success" size="sm" onClick={handleHoanThanh}>
             Hoàn thành
           </Button>
         </div>
