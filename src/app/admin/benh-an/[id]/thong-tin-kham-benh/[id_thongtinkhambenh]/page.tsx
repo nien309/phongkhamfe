@@ -17,6 +17,9 @@ import { CreateToaThuocFormValues } from "@/lib/validations/toathuoc";
 import { ChiTietThuocFormDialog } from "@/components/toathuoc/ChiTietThuocFormDialog";
 import { ChiTietToaThuocFormValues } from "@/lib/validations/toathuoc";
 import { ChiTietToaThuoc } from "@/types/toathuoc";
+import { ChiDinhFormDialog } from "@/components/chidinh/ChiDinhFormDialog";
+import { ChiDinhFormValues } from "@/lib/validations/chidinh";
+import { ChiDinh } from "@/types/chidinh";
 
 export default function ThongTinKhamBenhDetailPage() {
   const params = useParams();
@@ -26,6 +29,8 @@ export default function ThongTinKhamBenhDetailPage() {
   const [openToaThuocDialog, setOpenToaThuocDialog] = useState(false);
   const [openChiTietThuocDialog, setOpenChiTietThuocDialog] = useState(false);
   const [selectedChiTietThuoc, setSelectedChiTietThuoc] = useState<ChiTietToaThuoc | undefined>(undefined);
+  const [openChiDinhDialog, setOpenChiDinhDialog] = useState(false);
+  const [selectedChiDinh, setSelectedChiDinh] = useState<ChiDinh | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +76,22 @@ export default function ThongTinKhamBenhDetailPage() {
   const handleEditChiTietThuoc = (chiTietThuoc: ChiTietToaThuoc) => {
     setSelectedChiTietThuoc(chiTietThuoc);
     setOpenChiTietThuocDialog(true);
+  };
+
+  const handleCreateChiDinh = async (data: ChiDinhFormValues) => {
+    try {
+      // Refresh the data to get the updated medical orders
+      const updatedData = await thongtinkhamBenhApi.getDetailById(Number(params.id_thongtinkhambenh));
+      setThongTinKhamBenh(updatedData);
+      setSelectedChiDinh(undefined);
+    } catch (error) {
+      console.error("Failed to refresh data after handling chi dinh:", error);
+    }
+  };
+
+  const handleEditChiDinh = (chiDinh: ChiDinh) => {
+    setSelectedChiDinh(chiDinh);
+    setOpenChiDinhDialog(true);
   };
 
   const getStatusBadgeVariant = (status: string) => {
@@ -222,7 +243,21 @@ export default function ThongTinKhamBenhDetailPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Chỉ định</CardTitle>
+          <CardTitle>
+            <div className="flex justify-between items-center">
+              <span>Chỉ định</span>
+              {thongTinKhamBenh.trangthai === "dang_kham" && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setOpenChiDinhDialog(true)}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Thêm chỉ định
+                </Button>
+              )}
+            </div>
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -231,7 +266,8 @@ export default function ThongTinKhamBenhDetailPage() {
                 <TableHead>Tên dịch vụ</TableHead>
                 <TableHead>Số lượng</TableHead>
                 <TableHead>Đơn giá</TableHead>
-                <TableHead>Ghi chú</TableHead>
+                <TableHead>Ngày chỉ định</TableHead>
+                <TableHead>Trạng thái</TableHead>
               </TableRow>
             </TableHeader>
             {thongTinKhamBenh.chidinh && thongTinKhamBenh.chidinh.length > 0 && (
@@ -240,7 +276,8 @@ export default function ThongTinKhamBenhDetailPage() {
                   <TableRow key={item.id_chidinh}>
                     <TableCell>{item.dichvu.tendichvu}</TableCell>
                     <TableCell>{item.soluong}</TableCell>
-                    <TableCell>{item.dongia}</TableCell>
+                    <TableCell>{item.dongia.toLocaleString()}đ</TableCell>
+                    <TableCell>{format(new Date(item.ngaychidinh), "dd/MM/yyyy")}</TableCell>
                     <TableCell>{item.trangthai}</TableCell>
                   </TableRow>
                 ))}
@@ -273,7 +310,13 @@ export default function ThongTinKhamBenhDetailPage() {
           </CardContent>
         </Card>
       )}
-
+      {thongTinKhamBenh.trangthai === "dang_kham" && (
+        <div className="flex justify-end">
+          <Button variant="success" size="sm">
+            Hoàn thành
+          </Button>
+        </div>
+      )}
       <ToaThuocFormDialog
         open={openToaThuocDialog}
         onOpenChange={setOpenToaThuocDialog}
@@ -294,6 +337,18 @@ export default function ThongTinKhamBenhDetailPage() {
           defaultValues={selectedChiTietThuoc}
         />
       )}
+
+      <ChiDinhFormDialog
+        open={openChiDinhDialog}
+        onOpenChange={(open) => {
+          setOpenChiDinhDialog(open);
+          if (!open) setSelectedChiDinh(undefined);
+        }}
+        onSubmit={handleCreateChiDinh}
+        id_thongtinkhambenh={Number(params.id_thongtinkhambenh)}
+        defaultValues={selectedChiDinh}
+      />
+      
     </div>
   );
 } 
