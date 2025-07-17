@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ThongTinKhamBenhDetail } from "@/types/thongtinkhambenh";
 import { thongtinkhamBenhApi } from "@/lib/api/thongtinbenhan";
 import { toaThuocApi } from "@/lib/api/toathuoc";
@@ -20,6 +20,7 @@ import { ChiTietToaThuoc } from "@/types/toathuoc";
 import { ChiDinhFormDialog } from "@/components/chidinh/ChiDinhFormDialog";
 import { ChiDinhFormValues } from "@/lib/validations/chidinh";
 import { ChiDinh } from "@/types/chidinh";
+import toast from "react-hot-toast";
 
 export default function ThongTinKhamBenhDetailPage() {
   const params = useParams();
@@ -31,7 +32,7 @@ export default function ThongTinKhamBenhDetailPage() {
   const [selectedChiTietThuoc, setSelectedChiTietThuoc] = useState<ChiTietToaThuoc | undefined>(undefined);
   const [openChiDinhDialog, setOpenChiDinhDialog] = useState(false);
   const [selectedChiDinh, setSelectedChiDinh] = useState<ChiDinh | undefined>(undefined);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -96,6 +97,9 @@ export default function ThongTinKhamBenhDetailPage() {
   const handleHoanThanh = async () => {
     try {
       await thongtinkhamBenhApi.update(Number(params.id_thongtinkhambenh), { trangthai: "da_hoan_thanh" });
+      toast.success("Hoàn thành khám bệnh thành công");
+      router.push(`/admin/benh-an/${params.id}`);
+
     } catch (error) {
       console.error("Failed to update thong tin kham benh:", error);
     }
