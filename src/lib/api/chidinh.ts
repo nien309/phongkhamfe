@@ -25,6 +25,11 @@ export const chiDinhApi = {
         return response.data
     },
 
+    getAll: async () => {
+        const response = await apiClient.get<ChiDinh[]>(API_ENDPOINT)
+        return response.data
+    },
+
     delete: async (id: number) => {
         const response = await apiClient.delete(`${API_ENDPOINT}/${id}`)
         return response.data
