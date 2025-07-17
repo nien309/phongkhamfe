@@ -9,26 +9,26 @@ import { khoaApi } from "@/lib/api/khoa";
 import { Khoa } from "@/types/khoa";
 
 export default function DichVuPage() {
-  const [dichvus, setDichVus] = useState<DichVu[]>([]);
-  const [khoas, setKhoas] = useState<Khoa[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [paginationLoading, setPaginationLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  const [perPage, setPerPage] = useState(10);
+  const [dichvus, setDichVus] = useState<DichVu[]>([]); //ds dịch vụ
+  const [khoas, setKhoas] = useState<Khoa[]>([]);//ds khoa để hiển thị tên khoa
+  const [loading, setLoading] = useState(true); //trạng thái ban đầu là loading
+  const [paginationLoading, setPaginationLoading] = useState(false); //trạng thái tải khi phân trang
+  const [currentPage, setCurrentPage] = useState(1);//trang hiện tại
+  const [totalPages, setTotalPages] = useState(1);//tổng số trang
+  const [totalItems, setTotalItems] = useState(0); //tổng số mục
+  const [perPage, setPerPage] = useState(10); //số mục mỗi trang
 
-  useEffect(() => {
-    fetchData();
+  useEffect(() => { //Gọi fetchData khi component mount
+    fetchData(); //Lấy đồng thời danh sách dịch vụ và khoa bằng Promise.all
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { //Theo dõi thay đổi currentPage và perPage để cập nhật data
     if (!loading) {
       handlePaginationChange();
     }
   }, [currentPage, perPage]);
 
-  const handlePaginationChange = async () => {
+  const handlePaginationChange = async () => { //gọi API để lấy dữ liệu theo trang
     setPaginationLoading(true);
     try {
       const dichvuData = await dichVuApi.getAll(currentPage, perPage);
@@ -60,6 +60,14 @@ export default function DichVuPage() {
     }
   };
 
+
+// handlePageChange: Thay đổi trang hiện tại với validation
+
+// handlePerPageChange: Thay đổi số item mỗi trang và reset về trang 1
+
+// getKhoaName: Lấy tên khoa từ ID
+
+//formatCurrency: Định dạng tiền tệ VND
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
@@ -139,7 +147,7 @@ export default function DichVuPage() {
             value={perPage}
             onChange={handlePerPageChange}
             className="border rounded px-2 py-1 text-sm"
-            disabled={paginationLoading}
+            disabled={paginationLoading} //Cho phép chọn số item mỗi trang (10, 20, 50, 100)
           >
             <option value={10}>10</option>
             <option value={20}>20</option>

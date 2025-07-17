@@ -1,3 +1,4 @@
+import { KhachHang } from "./khachhang";
 import { Khoa } from "./khoa";
 import { NhanVien } from "./nhanvien";
 
@@ -12,6 +13,9 @@ export interface BenhAn {
     deleted_at: string;
     khoa: Khoa;
     nhanvien: NhanVien;
+    hosobenhan:{
+        khachhang: KhachHang;
+    };
     id_khoa: number;
     id_nhanvien: number;
 }

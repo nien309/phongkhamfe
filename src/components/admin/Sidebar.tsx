@@ -19,8 +19,10 @@ const menuItems = [
   { label: "Khoa", icon: Stethoscope, href: "/admin/khoa", restrictedTo: ['bacsi', 'letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang'] },
   { label: "Ca khám", icon: ClipboardList, href: "/admin/ca-kham" ,restrictedTo: ['bacsi', 'letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang']},
   { label: "Toa thuốc", icon: FilePlus2, href: "/admin/toa-thuoc", restrictedTo: ['letan', 'thungan', 'kythuatvien', 'khachhang'] },
-  { label: "Hóa đơn", icon: Receipt, href: "/admin/hoa-don", restrictedTo: ['bacsi', 'letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang'] },
+  { label: "Hóa đơn", icon: Receipt, href: "/admin/hoa-don", restrictedTo: ['bacsi', 'letan', 'kythuatvien', 'dieuduong', 'khachhang'] },
+  { label: "Tạo hóa đơn", icon: Receipt, href: "/admin/tao-hoa-don", restrictedTo: ['bacsi', 'letan', 'kythuatvien', 'dieuduong', 'khachhang'] },
   { label: "Dịch vụ", icon: Receipt, href: "/admin/dich-vu", restrictedTo: ['bacsi', 'letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang'] },
+  { label: "Quản lý chỉ định", icon: Receipt, href: "/admin/chi-dinh", restrictedTo: ['letan', 'thungan', 'dieuduong', 'khachhang'] },
 ];
 
 export default function Sidebar() {

@@ -7,10 +7,10 @@ export default function AdminDashboardPage() {
   return (
     <div className="p-6">
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm">
-        <h1 className="text-3xl font-bold text-blue-700">Xin chào, Quản trị viên!</h1>
+        <h1 className="text-3xl font-bold text-blue-700">Chào bạn!</h1>
         <p className="mt-3 text-gray-700 text-base">
           Chào mừng bạn đến với hệ thống quản lý <strong>Phòng khám Đông Dương</strong>. <br />
-          Hãy sử dụng thanh điều hướng bên trái để quản lý tài khoản, nhân viên, khách hàng, lịch làm việc, nhiều nội dung khác.
+          Hãy sử dụng thanh điều hướng bên trái để quản lý tài khoản, nhân viên, khách hàng, lịch làm việc và nhiều nội dung khác.
         </p>
 
         {/* <Button

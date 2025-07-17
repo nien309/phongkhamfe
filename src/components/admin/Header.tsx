@@ -1,16 +1,3 @@
-// "use client";
-
-
-
-// export default function Header() {
-//   return (
-//     <header className="w-full bg-white shadow p-4 flex items-center justify-between">
-//       <div className="text-xl font-semibold text-blue-700">Hệ thống quản lý phòng khám</div>
-      
-//     </header>
-//   );
-// }
-
 'use client';
 
 import { LogOut } from 'lucide-react'; // ✅ Icon mũi tên đăng xuất

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"; // quản lý form
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,10 +16,10 @@ import { Input } from "@/components/ui/input";
 import { toast } from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "axios"; //gọi api
 
 // Password validation schema
-const passwordSchema = z.object({
+const passwordSchema = z.object({ //mật khẩu ít nhất 8 ký tự
   password: z.string()
     .min(8, "Password must be at least 8 characters")
     // .regex(/[A-Z]/, "Must contain at least one uppercase letter")
@@ -27,18 +27,18 @@ const passwordSchema = z.object({
     // .regex(/[0-9]/, "Must contain at least one number")
     // .regex(/[^A-Za-z0-9]/, "Must contain at least one special character")
     ,
-  confirmPassword: z.string()
+  confirmPassword: z.string() //xác nhận mk nên khớp với mật khẩu
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"]
 });
 
 export default function ResetPasswordPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [isLoading, setIsLoading] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-  const [email, setEmail] = useState<string | null>(null);
+  const router = useRouter(); //để điều hướng
+  const searchParams = useSearchParams(); //lấy tham số từ URL
+  const [isLoading, setIsLoading] = useState(false);// trạng thái loading khi submit
+  const [token, setToken] = useState<string | null>(null); //lưu token từ URL
+  const [email, setEmail] = useState<string | null>(null); //lưu email từ URL
 
   useEffect(() => {
     // Get token and email from URL

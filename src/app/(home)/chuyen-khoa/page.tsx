@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { chuyenkhoaApi } from "@/lib/api/chuyenkhoa"
+import { chuyenkhoaApi } from "@/lib/api/chuyenkhoa" //gọi API lấy dữ liệu chuyên khoa
 import { Khoa } from "@/types/khoa"
 import Link from "next/link"
 
 export default function ChuyenKhoaPage() {
-  const [chuyenkhoas, setChuyenkhoas] = useState<Khoa[]>([])
-  const [loading, setLoading] = useState(true)
+  const [chuyenkhoas, setChuyenkhoas] = useState<Khoa[]>([]) // Mảng chứa danh sách chuyên khoa, kiểu Khoa[]
+  const [loading, setLoading] = useState(true) // Boolean để xác định trạng thái loading
 
   useEffect(() => {
     const fetchChuyenKhoas = async () => {
@@ -73,7 +73,7 @@ export default function ChuyenKhoaPage() {
       <div className="mt-16 text-center">
         <h2 className="text-2xl font-bold mb-4">Đặt Lịch Khám</h2>
         <p className="text-gray-600 mb-6">
-          Liên hệ với chúng tôi để đặt lịch khám với bác sĩ chuyên khoa
+          Liên hệ với chúng tôi để  với bác sĩ chuyên khoa
         </p>
         <a
           href="/dat-lich"

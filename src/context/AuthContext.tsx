@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { User } from '@/types/user'
 
 
-interface LoginCredentials {
+interface LoginCredentials {//Định nghĩa cấu trúc dữ liệu cho thông tin đăng nhập (email và mật khẩu)
   email: string
   matkhau: string
 }
@@ -19,7 +19,7 @@ interface LoginCredentials {
 //   // Add other registration fields as needed
 // }
 
-interface AuthContextType {
+interface AuthContextType {//Định nghĩa các giá trị và phương thức sẽ được cung cấp bởi AuthContext
   user: User | null
   isLoading: boolean
   isAuthenticated: boolean
@@ -161,30 +161,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(false)
     }
   }
-
-//   const register = async (credentials: RegisterCredentials) => {
-//     try {
-//       setIsLoading(true)
-//       const response: AxiosResponse<{ user: User; token: string }> = await apiClient.post(
-//         REGISTER_URL,
-//         credentials
-//       )
-
-//       const { user: userData, token } = response.data
-
-//       // Set user data
-//       setUser(userData)
-
-//       // Cookie should be set by the server
-//       // Redirect to dashboard
-//       router.push('/admin')
-//     } catch (error) {
-//       console.error('Registration failed:', error)
-//       throw error
-//     } finally {
-//       setIsLoading(false)
-//     }
-//   }
 
   const logout = async () => {
     try {

@@ -1,3 +1,4 @@
+import { BenhAn } from "./benhan";
 import { ChiDinh } from "./chidinh";
 import { HoaDon } from "./hoadon";
 import { ToaThuoc } from "./toathuoc";
@@ -11,6 +12,7 @@ export interface ThongTinKhamBenh {
     trangthai: string;
     created_at: string;
     updated_at: string;
+    benhan: BenhAn;
 }
 
 export interface ThongTinKhamBenhDetail {

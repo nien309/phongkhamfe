@@ -3,19 +3,35 @@ import { useState } from 'react'
 import axios from 'axios'
 
 export default function ForgotPasswordForm() {
+//   Sử dụng hook useState để quản lý các trạng thái:
+
+// email: Lưu giá trị email nhập vào
+
+// submitted: Flag kiểm tra đã submit thành công chưa
+
+// error: Lưu thông báo lỗi nếu có
+
+// isLoading: Trạng thái loading khi gọi API
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault() //Ngăn chặn hành vi mặc định của form với e.preventDefault()
     setError(null)
     setIsLoading(true)
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/forgot-password`,
+      // Gọi API POST đến endpoint /api/forgot-password với:
+
+      // Base URL lấy từ biến môi trường NEXT_PUBLIC_API_BASE_URL
+
+      // Body chứa email
+
+      // Headers xác định kiểu dữ liệu JSON
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/forgot-password`, 
         { email },
         {
           headers: {
@@ -68,7 +84,7 @@ export default function ForgotPasswordForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email quản trị"
-                required
+                required //bắt buộc nhập email
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 disabled={isLoading}
               />
