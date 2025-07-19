@@ -108,7 +108,7 @@ export function ChiDinhFormDialog({
       setSubmitting(true);
       let result;
       if (defaultValues) {
-        result = await chiDinhApi.update(defaultValues.id_chidinh, data);
+       
       } else {
         result = await chiDinhApi.create(data);
       }

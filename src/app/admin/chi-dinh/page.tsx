@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { toast } from "react-hot-toast"
-import { Loader2 } from "lucide-react"
+import { Edit, Loader2 } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -24,6 +24,8 @@ import {
 
 import { chiDinhApi } from "@/lib/api/chidinh"
 import { ChiDinh } from "@/types/chidinh"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export default function ChiDinhPage() {
   const [chiDinhs, setChiDinhs] = useState<ChiDinh[]>([])
@@ -50,7 +52,6 @@ export default function ChiDinhPage() {
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
       cho_thuc_hien: { label: "Chờ thực hiện", variant: "secondary" },
-      dang_thuc_hien: { label: "Đang thực hiện", variant: "default" },
       hoan_thanh: { label: "Hoàn thành", variant: "outline" },
     }
 
@@ -92,9 +93,8 @@ export default function ChiDinhPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tất cả</SelectItem>
-                <SelectItem value="cho_thuc_hien">Chờ thực hiện</SelectItem>
-                <SelectItem value="dang_thuc_hien">Đang thực hiện</SelectItem>
-                <SelectItem value="hoan_thanh">Hoàn thành</SelectItem>
+                <SelectItem value="chờ thực hiện">Chờ thực hiện</SelectItem>
+                <SelectItem value="hoàn thành">Hoàn thành</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -112,6 +112,7 @@ export default function ChiDinhPage() {
                   <TableHead>Ngày thực hiện</TableHead>
                   <TableHead>Kết quả</TableHead>
                   <TableHead>Trạng thái</TableHead>
+                  <TableHead>Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -124,7 +125,7 @@ export default function ChiDinhPage() {
                 ) : (
                   filteredChiDinh.map((chiDinh) => (
                     <TableRow key={chiDinh.id_chidinh}>
-                      <TableCell className="font-medium">CD{chiDinh.id_chidinh}</TableCell>
+                      <TableCell className="font-medium">{chiDinh.id_chidinh}</TableCell>
                       <TableCell>{chiDinh.dichvu.tendichvu}</TableCell>
                       <TableCell>{chiDinh.soluong}</TableCell>
                       <TableCell>{chiDinh.dongia.toLocaleString('vi-VN')} đ</TableCell>
@@ -137,6 +138,13 @@ export default function ChiDinhPage() {
                       </TableCell>
                       <TableCell>{chiDinh.ketqua || '-'}</TableCell>
                       <TableCell>{getStatusBadge(chiDinh.trangthai)}</TableCell>
+                      <TableCell>
+                        <Link href={`/admin/chi-dinh/${chiDinh.id_chidinh}`}>
+                          <Button variant="outline" size="icon">
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                      </TableCell>
                     </TableRow>
                   ))
                 )}

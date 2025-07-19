@@ -56,14 +56,15 @@ const Footer = () => {
     </div>
   </div>
 
-  {/* Nút lên đầu trang */}
+  {/* Nút lên đầu trang
   <button
     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
     className="absolute right-4 bottom-4 p-2 bg-blue-700 rounded-full hover:bg-blue-600"
     aria-label="Lên đầu trang"
   >
     <FaArrowUp />
-  </button>
+  </button> */}
+  
 </footer>
 
   );

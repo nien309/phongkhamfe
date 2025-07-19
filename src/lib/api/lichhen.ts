@@ -5,7 +5,7 @@ const API_ENDPOINT = "/api/admin/lichhen"
 
 export const lichhenApi = {
   create: async (data: CreateLichHen) => {
-    const response = await apiClient.post<LichHenResponse>(API_ENDPOINT, data)
+    const response = await apiClient.post<LichHenResponse>("/api/lichhen", data)
     return response.data
   },
   getAll: async () => {
