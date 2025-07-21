@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Plus, Pencil } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Loader2 } from "lucide-react";
 import { ToaThuocFormDialog } from "@/components/toathuoc/ToaThuocFormDialog";
 import { CreateToaThuocFormValues } from "@/lib/validations/toathuoc";
 import { ChiTietThuocFormDialog } from "@/components/toathuoc/ChiTietThuocFormDialog";
@@ -33,6 +33,7 @@ export default function ThongTinKhamBenhDetailPage() {
   const [openChiDinhDialog, setOpenChiDinhDialog] = useState(false);
   const [selectedChiDinh, setSelectedChiDinh] = useState<ChiDinh | undefined>(undefined);
   const router = useRouter();
+  const [submitting, setSubmitting] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -96,14 +97,29 @@ export default function ThongTinKhamBenhDetailPage() {
   };
   const handleHoanThanh = async () => {
     try {
+      setSubmitting(true)
+      if(!checkChiDinhHoanThanh()){
+        toast.error("Vui lòng hoàn thành tất cả chỉ định trước khi hoàn thành khám bệnh");
+        return;
+      }
       await thongtinkhamBenhApi.update(Number(params.id_thongtinkhambenh), { trangthai: "da_hoan_thanh" });
       toast.success("Hoàn thành khám bệnh thành công");
       router.push(`/admin/benh-an/${params.id}`);
 
-    } catch (error) {
-      console.error("Failed to update thong tin kham benh:", error);
+    } catch (error: any) {
+      toast.error(`Có lỗi xảy ra khi cập nhật trạng thái: ${error.response?.data?.message || 'Có lỗi xảy ra'}`)
+      console.error(error)
+    } finally {
+      setSubmitting(false)
     }
   };
+
+  const checkChiDinhHoanThanh = () => {
+    if(thongTinKhamBenh && thongTinKhamBenh.chidinh && thongTinKhamBenh.chidinh.length > 0){
+      return thongTinKhamBenh.chidinh.every(item => item.trangthai === "hoàn thành");
+    }
+    return false;
+  }
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
       case "dang_kham":
@@ -273,6 +289,7 @@ export default function ThongTinKhamBenhDetailPage() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Mã chỉ định</TableHead>
                 <TableHead>Tên dịch vụ</TableHead>
                 <TableHead>Số lượng</TableHead>
                 <TableHead>Đơn giá</TableHead>
@@ -284,6 +301,7 @@ export default function ThongTinKhamBenhDetailPage() {
               <TableBody>
                 {thongTinKhamBenh.chidinh.map((item) => (
                   <TableRow key={item.id_chidinh}>
+                    <TableCell>{item.id_chidinh}</TableCell>
                     <TableCell>{item.dichvu.tendichvu}</TableCell>
                     <TableCell>{item.soluong}</TableCell>
                     <TableCell>{item.dongia.toLocaleString()}đ</TableCell>
@@ -320,10 +338,22 @@ export default function ThongTinKhamBenhDetailPage() {
           </CardContent>
         </Card>
       )}
-      {thongTinKhamBenh.trangthai === "dang_kham" && (
+      {thongTinKhamBenh.trangthai === "dang_kham" && thongTinKhamBenh.chidinh && thongTinKhamBenh.chidinh.length > 0  && (
         <div className="flex justify-end">
-          <Button variant="success" size="sm" onClick={handleHoanThanh}>
-            Hoàn thành
+          <Button 
+            variant="success" 
+            size="sm" 
+            onClick={handleHoanThanh}
+            disabled={submitting}
+          >
+            {submitting ? (
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Đang xử lý...</span>
+              </div>
+            ) : (
+              "Hoàn thành"
+            )}
           </Button>
         </div>
       )}

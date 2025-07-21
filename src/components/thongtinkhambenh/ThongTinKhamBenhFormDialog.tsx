@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { ThongTinKhamBenh } from "@/types/thongtinkhambenh";
 import { createThongTinKhamBenhSchema, CreateThongTinKhamBenhFormValues } from "@/lib/validations/thongtinkhambenh";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,8 @@ export function ThongTinKhamBenhFormDialog({
   onSubmit,
   id_benhan,
 }: ThongTinKhamBenhFormDialogProps) {
+  const [loading, setLoading] = useState(false);
+  
   const form = useForm<CreateThongTinKhamBenhFormValues>({
     resolver: zodResolver(createThongTinKhamBenhSchema),
     defaultValues: {
@@ -53,7 +56,6 @@ export function ThongTinKhamBenhFormDialog({
 
   useEffect(() => {
     if (defaultValues) {
-        
       form.reset({
         trieuchung: defaultValues.trieuchung,
         ngaykham: format(new Date(defaultValues.ngaykham), "yyyy-MM-dd"),
@@ -66,11 +68,14 @@ export function ThongTinKhamBenhFormDialog({
 
   const handleSubmit = async (data: CreateThongTinKhamBenhFormValues) => {
     try {
+      setLoading(true);
       await onSubmit(data);
       form.reset();
       onOpenChange(false);
     } catch (error) {
       console.error("Failed to submit form:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,7 +89,6 @@ export function ThongTinKhamBenhFormDialog({
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-
             <FormField
               control={form.control}
               name="trieuchung"
@@ -96,6 +100,7 @@ export function ThongTinKhamBenhFormDialog({
                       placeholder="Nhập triệu chứng"
                       className="resize-none"
                       {...field}
+                      disabled={loading}
                     />
                   </FormControl>
                   <FormMessage />
@@ -114,6 +119,7 @@ export function ThongTinKhamBenhFormDialog({
                       placeholder="Nhập chẩn đoán"
                       className="resize-none"
                       {...field}
+                      disabled={loading}
                     />
                   </FormControl>
                   <FormMessage />
@@ -125,11 +131,19 @@ export function ThongTinKhamBenhFormDialog({
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
+                disabled={loading}
               >
                 Hủy
               </Button>
-              <Button type="submit">
-                {defaultValues ? "Cập nhật" : "Thêm mới"}
+              <Button type="submit" disabled={loading}>
+                {loading ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Đang xử lý...</span>
+                  </div>
+                ) : (
+                  defaultValues ? "Cập nhật" : "Thêm mới"
+                )}
               </Button>
             </DialogFooter>
           </form>

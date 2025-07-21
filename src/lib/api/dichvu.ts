@@ -6,7 +6,7 @@ const API_ENDPOINT = "/api/admin/dichvus"
 
 export const dichVuApi = {
   getAll: async (page: number = 1, perPage: number = 10) => {
-    const response = await apiClient.get<DichVuResponse>(API_ENDPOINT, {
+    const response = await apiClient.get<DichVuResponse>('api/dichvus', {
       params: {
         page,
         per_page: perPage

@@ -28,6 +28,7 @@ export default function CustomerPage() {
   const fetchKhachhangs = async () => {
     try {
       const data = await khachhangApi.getAll();
+      console.log("Khách hàng:", data);
       setKhachhangs(data);
     } catch (error) {
       console.error("Error fetching khachhangs:", error);

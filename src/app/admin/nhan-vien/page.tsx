@@ -30,6 +30,7 @@ export default function EmployeePage() {
   const fetchEmployees = async () => {
     try {
       const data = await nhanvienApi.getAll();
+      console.log("Nhân viên:", data);
       setEmployees(data);
     } catch (error) {
       console.log(error);

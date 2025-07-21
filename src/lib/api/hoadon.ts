@@ -15,6 +15,10 @@ export const hoaDonApi = {
         const response = await apiClient.put(`/api/hoadon/${id}`, data)
         return response.data
     },
+    cancel: async (id: number, lydo: string) => {
+        const response = await apiClient.patch(`/api/hoadon/${id}/cancel`, {lydo})
+        return response.data
+    },
     getById: async (id: number) => {
         const response = await apiClient.get<HoaDonDetail>(`/api/hoadon/${id}`)
         return response.data

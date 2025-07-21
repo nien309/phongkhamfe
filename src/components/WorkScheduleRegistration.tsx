@@ -19,7 +19,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { cleanRegex } from 'node_modules/zod/dist/types/v4/core/util';
 
 interface Shift {
   id: number;
@@ -53,7 +52,7 @@ const WorkScheduleRegistration = () => {
   const generateMonthOptions = () => {
     const options = [];
     const today = new Date();
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 2; i++) { //chỉnh số thang muốn hiển thị
       const date = new Date(today.getFullYear(), today.getMonth() + i, 1);
       const monthYear = `${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
       options.push({

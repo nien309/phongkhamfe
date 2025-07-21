@@ -1,3 +1,4 @@
+import { LichLamViec } from "@/types/lichlamviec"
 import { apiClient } from "../axios-client"
 import { DKLichLamViec } from "@/types/dklichlamviec"
 
@@ -6,7 +7,10 @@ export const lichlamviecApi = {
     const response = await apiClient.post("/api/lich-dang-ky", data)
     return response.data
   },
-  
+  getLichLamViec: async () => {
+    const response = await apiClient.get<LichLamViec[]>(`/api/admin/lich-lam-viec`)
+    return response.data
+  },
   getAll: async () => {
     const response = await apiClient.get("/api/lich-dang-ky")
     return response.data.data

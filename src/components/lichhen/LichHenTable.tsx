@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { LichHenResponse } from "@/types/lichhen";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 interface LichHenTableProps {
     data: LichHenResponse[];
@@ -20,6 +21,7 @@ interface LichHenTableProps {
 export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
     const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
     console.log(data);
+    const {user} = useAuth();
     // Function to format date string
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('vi-VN');
@@ -106,7 +108,7 @@ export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
                         variant="outline"
                         className="bg-purple-50 text-purple-600 hover:bg-purple-100"
                         onClick={() => handleStatusUpdate(item.id_lichhen, 'chuyển đến bác sĩ')}
-                        disabled={loadingStates[`${item.id_lichhen}-chuyển đến bác sĩ`]}
+                        disabled={loadingStates[`${item.id_lichhen}-chuyển đến bác sĩ`] || user?.nhanvien?.chucvu !== 'letan'}
                     >
                         {loadingStates[`${item.id_lichhen}-chuyển đến bác sĩ`] ? (
                             <div className="flex items-center">

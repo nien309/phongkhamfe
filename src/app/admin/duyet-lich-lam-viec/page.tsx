@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LichLamViec } from "@/types/lichlamviec";
+import { DkLichLamViec } from "@/types/lichlamviec";
 import { lichlamviecApi } from "@/lib/api/lichlamviec";
 import { LichLamViecTable } from "@/components/lichlamviec/LichLamViecTable";
 
 export default function DuyetLichLamViecPage() {
-    const [data, setData] = useState<LichLamViec[]>([]);
+    const [data, setData] = useState<DkLichLamViec[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { CancelHoaDonDialog } from "@/components/hoadon/CancelHoaDonDialog"
 
 import { hoaDonApi } from "@/lib/api/hoadon"
 import { HoaDonDetail } from "@/types/hoadon"
@@ -25,33 +26,38 @@ export default function HoaDonDetailPage() {
   const router = useRouter()
   const [hoaDon, setHoaDon] = useState<HoaDonDetail | null>(null)
   const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false)
   const printRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const fetchHoaDon = async () => {
-      try {
-        const id = Number(params.id)
-        const result = await hoaDonApi.getById(id)
-        setHoaDon(result)
-      } catch (error: any) {
-        toast.error(`Có lỗi xảy ra khi tải thông tin hóa đơn: ${error.response?.data?.message || 'Có lỗi xảy ra'}`)
-        console.error(error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchHoaDon()
   }, [params.id])
+
+  const fetchHoaDon = async () => {
+    try {
+      const id = Number(params.id)
+      const result = await hoaDonApi.getById(id)
+      setHoaDon(result)
+    } catch (error: any) {
+      toast.error(`Có lỗi xảy ra khi tải thông tin hóa đơn: ${error.response?.data?.message || 'Có lỗi xảy ra'}`)
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
   
   const handleThanhToan = async () => {
     try {
+      setSubmitting(true)
       await hoaDonApi.updateStatus(Number(params.id), {trangthai: "da_thanh_toan"})
       toast.success("Thanh toán thành công")
       router.push("/admin/hoa-don")
     } catch (error: any) {
       toast.error(`Có lỗi xảy ra khi thanh toán hóa đơn: ${error.response?.data?.message || 'Có lỗi xảy ra'}`)
       console.error(error)
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -223,6 +229,12 @@ export default function HoaDonDetailPage() {
                   <span className="text-gray-500">Tổng tiền:</span>
                   <span className="font-semibold">{hoaDon.tongtien} đ</span>
                 </div>
+                {hoaDon.lydo_huy && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Lý do hủy:</span>
+                    <span>{hoaDon.lydo_huy}</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -273,24 +285,36 @@ export default function HoaDonDetailPage() {
           )}
 
           <div className="flex justify-end gap-3">
-            {
-                hoaDon.trangthai === "cho_thanh_toan" && (
-                    <Button variant="destructive">
-                        Hủy hóa đơn
-                    </Button>
-                )
-            }
-            {
-                hoaDon.trangthai === "cho_thanh_toan" && (
-                    <Button variant="success" onClick={handleThanhToan}>
-                        Thanh toán
-                    </Button>
-                )
-            }
+            {hoaDon.trangthai === "cho_thanh_toan" && (
+              <>
+                <Button 
+                  variant="destructive"
+                  onClick={() => setCancelDialogOpen(true)}
+                  disabled={submitting}
+                >
+                  Hủy hóa đơn
+                </Button>
+                <Button 
+                  variant="success" 
+                  onClick={handleThanhToan}
+                  disabled={submitting}
+                >
+                  {submitting ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Đang xử lý...</span>
+                    </div>
+                  ) : (
+                    "Thanh toán"
+                  )}
+                </Button>
+              </>
+            )}
             <Button 
               variant="default"
               onClick={handlePrint}
               className="gap-2"
+              disabled={submitting}
             >
               <Printer className="h-4 w-4" />
               In hóa đơn
@@ -298,6 +322,13 @@ export default function HoaDonDetailPage() {
           </div>
         </CardContent>
       </Card>
+
+      <CancelHoaDonDialog
+        open={cancelDialogOpen}
+        onOpenChange={setCancelDialogOpen}
+        hoaDonId={hoaDon.id_hoadon}
+        onSuccess={fetchHoaDon}
+      />
     </div>
   )
 }

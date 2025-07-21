@@ -9,11 +9,11 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { LichLamViec } from "@/types/lichlamviec";
+import { DkLichLamViec } from "@/types/lichlamviec";
 import Link from "next/link";
 
 interface LichLamViecTableProps {
-    data: LichLamViec[];
+    data: DkLichLamViec[];
     onApprove?: (id: number) => void;
     onReject?: (id: number) => void;
 }

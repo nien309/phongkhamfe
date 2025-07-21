@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LichLamViec } from "@/types/lichlamviec";
+import { DkLichLamViec } from "@/types/lichlamviec";
 import { lichlamviecApi } from "@/lib/api/lichlamviec";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,7 +27,7 @@ const shifts: Shift[] = [
 export default function LichLamViecDetailPage({ params }: PageProps) {
     const router = useRouter();
     const { id } = use(params);
-    const [data, setData] = useState<LichLamViec | null>(null);
+    const [data, setData] = useState<DkLichLamViec | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [daysInMonth, setDaysInMonth] = useState<number[]>([]);

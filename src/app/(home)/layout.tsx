@@ -1,5 +1,7 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import BackToTop from "@/components/ui/backtotop";
+import CozeChat from "@/components/ui/cozechat";
 
 export default function RootLayout({
     children,
@@ -12,6 +14,8 @@ export default function RootLayout({
         <main className="text-black">
             {children}
         </main>
+        <BackToTop />
+        <CozeChat />
         <Footer />
     </>
     );
