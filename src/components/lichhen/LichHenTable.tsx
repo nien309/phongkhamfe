@@ -22,6 +22,16 @@ export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
     const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
     console.log(data);
     const {user} = useAuth();
+
+    // Function to check if a date is today
+    const isDateToday = (dateString: string) => {
+        const today = new Date();
+        const date = new Date(dateString);
+        return date.getDate() === today.getDate() &&
+            date.getMonth() === today.getMonth() &&
+            date.getFullYear() === today.getFullYear();
+    };
+
     // Function to format date string
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('vi-VN');
@@ -108,7 +118,7 @@ export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
                         variant="outline"
                         className="bg-purple-50 text-purple-600 hover:bg-purple-100"
                         onClick={() => handleStatusUpdate(item.id_lichhen, 'chuyển đến bác sĩ')}
-                        disabled={loadingStates[`${item.id_lichhen}-chuyển đến bác sĩ`] || user?.nhanvien?.chucvu !== 'letan'}
+                        disabled={loadingStates[`${item.id_lichhen}-chuyển đến bác sĩ`] || user?.nhanvien?.chucvu !== 'letan' || !isDateToday(item.ngayhen)}
                     >
                         {loadingStates[`${item.id_lichhen}-chuyển đến bác sĩ`] ? (
                             <div className="flex items-center">
@@ -127,7 +137,7 @@ export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
                         variant="outline"
                         className="bg-indigo-50 text-indigo-600 hover:bg-indigo-100"
                         onClick={() => handleStatusUpdate(item.id_lichhen, 'chuyển đến lễ tân')}
-                        disabled={loadingStates[`${item.id_lichhen}-chuyển đến lễ tân`]}
+                        disabled={loadingStates[`${item.id_lichhen}-chuyển đến lễ tân`] || !isDateToday(item.ngayhen)}
                     >
                         {loadingStates[`${item.id_lichhen}-chuyển đến lễ tân`] ? (
                             <div className="flex items-center">
@@ -146,7 +156,7 @@ export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
                         variant="outline"
                         className="bg-green-50 text-green-600 hover:bg-green-100"
                         onClick={() => handleStatusUpdate(item.id_lichhen, 'hoàn thành')}
-                        disabled={loadingStates[`${item.id_lichhen}-hoàn thành`]}
+                        disabled={loadingStates[`${item.id_lichhen}-hoàn thành`] || !isDateToday(item.ngayhen)}
                     >
                         {loadingStates[`${item.id_lichhen}-hoàn thành`] ? (
                             <div className="flex items-center">
