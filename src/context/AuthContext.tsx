@@ -1,3 +1,14 @@
+// file này giúp:
+// Đăng nhập người dùng (gửi API, lưu token vào cookie)
+
+// Đăng xuất (xóa token, redirect về trang đăng nhập)
+
+// Tự động kiểm tra nếu người dùng đã đăng nhập (dựa vào cookie)
+
+// Lấy thông tin người dùng hiện tại từ API
+
+// Bảo vệ các trang chỉ cho người đã đăng nhập truy cập (dùng withAuth())
+
 // contexts/AuthContext.tsx
 'use client'
 

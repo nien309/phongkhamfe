@@ -106,7 +106,7 @@ export default function Booking() {
 
   return (
     <section className="max-w-3xl mx-auto bg-blue-800 p-6 rounded shadow mt-10 mb-10">
-      <h2 className="text-2xl font-bold mb-6 text-white text-center">ĐĂNG KÝ KHÁM BỆNH</h2>
+      <h2 className="text-2xl font-bold mb-6 text-white text-center"></h2>
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4">
