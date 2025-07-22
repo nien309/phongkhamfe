@@ -63,8 +63,8 @@ export function UpdateBookingDialog({ open, onOpenChange, bookingId, onSuccess, 
           const data = await nhanvienApi.getBacSiByKhoa(currentKhoaId);
           setBacsis(data);
           if(currentBooking){
-            form.setValue("id_khoa", String(currentBooking.nhanvien.id_khoa));
-            form.setValue("id_nhanvien", String(currentBooking.id_nhanvien));
+            form.setValue("id_khoa", String(currentBooking?.nhanvien?.id_khoa));
+            form.setValue("id_nhanvien", String(currentBooking?.id_nhanvien));
           }else{
             form.setValue("id_khoa", "");
             form.setValue("id_nhanvien", "");

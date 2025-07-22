@@ -21,6 +21,7 @@ import { ChiDinhFormDialog } from "@/components/chidinh/ChiDinhFormDialog";
 import { ChiDinhFormValues } from "@/lib/validations/chidinh";
 import { ChiDinh } from "@/types/chidinh";
 import toast from "react-hot-toast";
+import { TaoLichTaiKhamDialog } from "@/components/lichhen/TaoLichTaiKhamDialog";
 
 export default function ThongTinKhamBenhDetailPage() {
   const params = useParams();
@@ -34,6 +35,7 @@ export default function ThongTinKhamBenhDetailPage() {
   const [selectedChiDinh, setSelectedChiDinh] = useState<ChiDinh | undefined>(undefined);
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false)
+  const [openLichTaiKhamDialog, setOpenLichTaiKhamDialog] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -350,7 +352,7 @@ export default function ThongTinKhamBenhDetailPage() {
         </Card>
       )}
       {thongTinKhamBenh.trangthai === "dang_kham" && thongTinKhamBenh.chidinh && thongTinKhamBenh.chidinh.length > 0  && (
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-3">
           <Button 
             variant="success" 
             size="sm" 
@@ -365,6 +367,14 @@ export default function ThongTinKhamBenhDetailPage() {
             ) : (
               "Hoàn thành"
             )}
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setOpenLichTaiKhamDialog(true)}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Tạo lịch tái khám
           </Button>
         </div>
       )}
@@ -400,6 +410,11 @@ export default function ThongTinKhamBenhDetailPage() {
         defaultValues={selectedChiDinh}
       />
       
+      <TaoLichTaiKhamDialog
+        open={openLichTaiKhamDialog}
+        onOpenChange={setOpenLichTaiKhamDialog}
+        id_khachhang={thongTinKhamBenh.benhan.hosobenhan.khachhang.id_khachhang}
+      />
     </div>
   );
 } 

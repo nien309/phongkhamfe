@@ -24,6 +24,7 @@ export interface ThongTinKhamBenhDetail {
     trangthai: string;
     created_at: string;
     updated_at: string;
+    benhan: BenhAn;
     toathuoc: ToaThuoc | null;
     chidinh: ChiDinh[] | null;
     hoadon: HoaDon[] | null;

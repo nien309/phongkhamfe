@@ -1,6 +1,6 @@
 import { apiClient } from "../axios-client"
 import { CreateLichHen, LichHenResponse } from "@/types/lichhen"
-import { UpdateBookingFormValues } from "../validations/lichhen"
+import { BookingFormSchemaTaiKham, UpdateBookingFormValues } from "../validations/lichhen"
 
 const API_ENDPOINT = "/api/admin/lichhen"
 
@@ -19,6 +19,10 @@ export const lichhenApi = {
   },
   updateThongTin: async (id: number, data: UpdateBookingFormValues) => {
     const response = await apiClient.patch<LichHenResponse>(`api/lichhen/chuyenBacSi/${id}`, data)
+    return response.data
+  },
+  createLichTaiKham: async (data: BookingFormSchemaTaiKham) => {
+    const response = await apiClient.post<LichHenResponse>("/api/admin/lichhen/tao-lich", data)
     return response.data
   }
 }
