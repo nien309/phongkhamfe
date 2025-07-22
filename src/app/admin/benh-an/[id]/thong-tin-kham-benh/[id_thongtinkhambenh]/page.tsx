@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Plus, Pencil, Loader2 } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Loader2, Eye } from "lucide-react";
 import { ToaThuocFormDialog } from "@/components/toathuoc/ToaThuocFormDialog";
 import { CreateToaThuocFormValues } from "@/lib/validations/toathuoc";
 import { ChiTietThuocFormDialog } from "@/components/toathuoc/ChiTietThuocFormDialog";
@@ -295,6 +295,7 @@ export default function ThongTinKhamBenhDetailPage() {
                 <TableHead>Đơn giá</TableHead>
                 <TableHead>Ngày chỉ định</TableHead>
                 <TableHead>Trạng thái</TableHead>
+                <TableHead>Hành động</TableHead>
               </TableRow>
             </TableHeader>
             {thongTinKhamBenh.chidinh && thongTinKhamBenh.chidinh.length > 0 && (
@@ -307,6 +308,16 @@ export default function ThongTinKhamBenhDetailPage() {
                     <TableCell>{item.dongia.toLocaleString()}đ</TableCell>
                     <TableCell>{format(new Date(item.ngaychidinh), "dd/MM/yyyy")}</TableCell>
                     <TableCell>{item.trangthai}</TableCell>
+                    <TableCell>
+                      <Link href={`/admin/benh-an/${params.id}/chi-dinh/${item.id_chidinh}`}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      </Link>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
