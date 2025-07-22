@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ThongTinKhamBenhDetail } from "@/types/thongtinkhambenh";
 import { thongtinkhamBenhApi } from "@/lib/api/thongtinbenhan";
@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Plus, Pencil, Loader2, Eye } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Loader2, Eye, Printer } from "lucide-react";
 import { ToaThuocFormDialog } from "@/components/toathuoc/ToaThuocFormDialog";
 import { CreateToaThuocFormValues } from "@/lib/validations/toathuoc";
 import { ChiTietThuocFormDialog } from "@/components/toathuoc/ChiTietThuocFormDialog";
@@ -36,6 +36,8 @@ export default function ThongTinKhamBenhDetailPage() {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false)
   const [openLichTaiKhamDialog, setOpenLichTaiKhamDialog] = useState(false);
+  const printRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -135,6 +137,104 @@ export default function ThongTinKhamBenhDetailPage() {
     }
   };
 
+  const handlePrint = () => {
+    const printContent = document.createElement('div');
+    if (printRef.current) {
+      printContent.innerHTML = `
+        <style>
+          @media print {
+            @page {
+              size: A4;
+              margin: 20mm;
+            }
+            body {
+              font-family: Arial, sans-serif;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 20px 0;
+            }
+            th, td {
+              border: 1px solid #ddd;
+              padding: 8px;
+              text-align: left;
+            }
+            th {
+              background-color: #f5f5f5;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+            }
+            .info-section {
+              margin-bottom: 20px;
+            }
+            .info-row {
+              margin-bottom: 10px;
+            }
+            .footer {
+              margin-top: 50px;
+              text-align: right;
+            }
+            .doctor-signature {
+              margin-top: 30px;
+              text-align: right;
+            }
+            /* Hide action column */
+            th:last-child,
+            td:last-child {
+              display: none;
+            }
+          }
+        </style>
+        <div class="header">
+          <h1>PHÒNG KHÁM ĐA KHOA</h1>
+          <p>Địa chỉ: 123 Đường ABC, Quận XYZ, TP.HCM</p>
+          <p>Điện thoại: (028) 1234 5678</p>
+          <h2>TOA THUỐC</h2>
+        </div>
+        <div class="info-section">
+          <div class="info-row">
+            <strong>Họ và tên:</strong> ${thongTinKhamBenh?.benhan.hosobenhan.khachhang.taikhoan.hoten}
+          </div>
+          <div class="info-row">
+            <strong>Ngày sinh:</strong> ${format(new Date(thongTinKhamBenh?.benhan.hosobenhan.khachhang.taikhoan.ngaysinh || ''), 'dd/MM/yyyy')}
+          </div>
+          <div class="info-row">
+            <strong>Ngày khám:</strong> ${format(new Date(thongTinKhamBenh?.ngaykham || ''), 'dd/MM/yyyy')}
+          </div>
+          <div class="info-row">
+            <strong>Chẩn đoán:</strong> ${thongTinKhamBenh?.chandoan}
+          </div>
+        </div>
+        ${printRef.current.innerHTML}
+        <div class="footer">
+          <p>Ngày ${format(new Date(), 'dd')} tháng ${format(new Date(), 'MM')} năm ${format(new Date(), 'yyyy')}</p>
+          <div class="doctor-signature">
+            <p>Bác sĩ khám bệnh</p>
+            <br/>
+            <br/>
+          
+          </div>
+        </div>
+      `;
+      
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(printContent.innerHTML);
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => {
+          printWindow.print();
+          printWindow.close();
+        }, 250);
+      } else {
+        toast.error('Không thể mở cửa sổ in. Vui lòng kiểm tra cài đặt trình duyệt.');
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -217,14 +317,24 @@ export default function ThongTinKhamBenhDetailPage() {
             <CardTitle>
               <div className="flex justify-between items-center">
                 <span>Toa thuốc</span>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => setOpenChiTietThuocDialog(true)}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Thêm thuốc
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={handlePrint}
+                  >
+                    <Printer className="h-4 w-4 mr-2" />
+                    In toa thuốc
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setOpenChiTietThuocDialog(true)}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Thêm thuốc
+                  </Button>
+                </div>
               </div>
             </CardTitle>
           </CardHeader>
@@ -234,36 +344,40 @@ export default function ThongTinKhamBenhDetailPage() {
               <p>Không có thuốc được đưa vào toa thuốc</p>
             )}
             {thongTinKhamBenh.toathuoc.chitiettoathuoc && thongTinKhamBenh.toathuoc.chitiettoathuoc.length > 0 && (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Tên thuốc</TableHead>
-                    <TableHead>Số lượng</TableHead>
-                    <TableHead>Đơn vị tính</TableHead>
-                    <TableHead>Cách dùng</TableHead>
-                    <TableHead>Hành động</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {thongTinKhamBenh.toathuoc.chitiettoathuoc.map((item) => (
-                    <TableRow key={item.id_chitiettoathuoc}>
-                      <TableCell>{item.ten}</TableCell>
-                      <TableCell>{item.so_luong}</TableCell>
-                      <TableCell>{item.don_vi_tinh}</TableCell>
-                      <TableCell>{item.cach_dung}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEditChiTietThuoc(item)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
+              <div ref={printRef}>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>STT</TableHead>
+                      <TableHead>Tên thuốc</TableHead>
+                      <TableHead>Số lượng</TableHead>
+                      <TableHead>Đơn vị tính</TableHead>
+                      <TableHead>Cách dùng</TableHead>
+                      <TableHead className="print:hidden">Hành động</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {thongTinKhamBenh.toathuoc.chitiettoathuoc.map((item, index) => (
+                      <TableRow key={item.id_chitiettoathuoc}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{item.ten}</TableCell>
+                        <TableCell>{item.so_luong}</TableCell>
+                        <TableCell>{item.don_vi_tinh}</TableCell>
+                        <TableCell>{item.cach_dung}</TableCell>
+                        <TableCell className="print:hidden">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEditChiTietThuoc(item)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             )}
           </CardContent>
         </Card>

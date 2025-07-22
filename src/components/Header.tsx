@@ -11,9 +11,9 @@ import { useRouter } from 'next/navigation';
 const navItems = [
   { label: 'TRANG CHỦ', href: '/' },
   { label: 'CHUYÊN KHOA', href: '/chuyen-khoa' },
-  { label: 'BÁC SĨ', href: '/bac-si' },
+  // { label: 'BÁC SĨ', href: '/bac-si' },
   { label: 'DỊCH VỤ', href: '/dich-vu' },
-  { label: 'ĐẶT LỊCH KHÁM', href: '/dat-lich' },
+  // { label: 'ĐẶT LỊCH KHÁM', href: '/dat-lich' },
   { label: 'HƯỚNG DẪN KHÁCH HÀNG', href: '/huong-dan' },
 ];
 

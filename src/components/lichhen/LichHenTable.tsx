@@ -23,7 +23,6 @@ export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
     const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
     const [selectedBookingId, setSelectedBookingId] = useState<number | null>(null);
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
-    console.log(data);
     const {user} = useAuth();
 
     // Function to check if a date is today

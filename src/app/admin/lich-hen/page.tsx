@@ -4,20 +4,26 @@ import { useEffect, useState } from "react";
 import { LichHenResponse } from "@/types/lichhen";
 import { lichhenApi } from "@/lib/api/lichhen";
 import { LichHenTable } from "@/components/lichhen/LichHenTable";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LichHenPage() {
     const [data, setData] = useState<LichHenResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
+    const {user} = useAuth();
     useEffect(() => {
         fetchData();
     }, []);
 
     const fetchData = async () => {
         try {
-            const response = await lichhenApi.getAll();
-            setData(response);
+            if(user?.nhanvien?.chucvu === "bacsi"){
+                const response = await lichhenApi.getLichHenByIdBacSi(user.nhanvien.id_nhanvien);
+                setData(response);
+            }else{
+                const response = await lichhenApi.getAll();
+                setData(response);
+            }
             setError(null);
         } catch (err) {
             console.error("Error fetching data:", err);

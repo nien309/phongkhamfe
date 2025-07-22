@@ -13,6 +13,10 @@ export const lichhenApi = {
     const response = await apiClient.get<LichHenResponse[]>(API_ENDPOINT)
     return response.data
   },
+  getLichHenByIdBacSi: async (id: number) => {
+    const response = await apiClient.get<LichHenResponse[]>(`/api/lichhen/bacsi/${id}`)
+    return response.data
+  },
   updateTrangThai: async (id: number, data: { trangthai: string }) => {
     const response = await apiClient.patch<LichHenResponse>(`${API_ENDPOINT}/capnhat-trangthai/${id}`, data)
     return response.data

@@ -82,12 +82,12 @@ export default function ChuyenKhoaDetailPage({ params }: Props) {
                 <p className="text-gray-600 mb-4">
                   Chuyên gia trong lĩnh vực {doctor.tenkhoa.toLowerCase()} với kinh nghiệm chuyên môn cao
                 </p>
-                <a
+                {/* <a
                   href={`/dat-lich?bacsi=${doctor.id_nhanvien}&khoa=${doctor.id_khoa}`}
                   className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Đặt lịch khám
-                </a>
+                </a> */}
               </div>
             </CardContent>
           </Card>
