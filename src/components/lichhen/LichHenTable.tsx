@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { LichHenResponse } from "@/types/lichhen";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { UpdateBookingDialog } from "./UpdateBookingDialog";
 
 interface LichHenTableProps {
     data: LichHenResponse[];
@@ -20,6 +21,8 @@ interface LichHenTableProps {
 
 export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
     const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
+    const [selectedBookingId, setSelectedBookingId] = useState<number | null>(null);
+    const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
     console.log(data);
     const {user} = useAuth();
 
@@ -67,6 +70,11 @@ export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
         } finally {
             setLoadingStates(prev => ({ ...prev, [loadingKey]: false }));
         }
+    };
+
+    const handleOpenUpdateDialog = (id: number) => {
+        setSelectedBookingId(id);
+        setIsUpdateDialogOpen(true);
     };
 
     // Function to determine which action buttons to show based on current status
@@ -117,7 +125,7 @@ export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
                         size="sm"
                         variant="outline"
                         className="bg-purple-50 text-purple-600 hover:bg-purple-100"
-                        onClick={() => handleStatusUpdate(item.id_lichhen, 'chuyển đến bác sĩ')}
+                        onClick={() => handleOpenUpdateDialog(item.id_lichhen)}
                         disabled={loadingStates[`${item.id_lichhen}-chuyển đến bác sĩ`] || user?.nhanvien?.chucvu !== 'letan' || !isDateToday(item.ngayhen)}
                     >
                         {loadingStates[`${item.id_lichhen}-chuyển đến bác sĩ`] ? (
@@ -174,41 +182,58 @@ export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
     };
 
     return (
-        <div className="rounded-md border">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Ngày hẹn</TableHead>
-                        <TableHead>Ca khám</TableHead>
-                        <TableHead>Khách hàng</TableHead>
-                        <TableHead>Bác sĩ</TableHead>
-                        <TableHead>Trạng thái</TableHead>
-                        <TableHead>Ghi chú</TableHead>
-                        <TableHead>Thao tác</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {data.map((item) => (
-                        <TableRow key={item.id_lichhen}>
-                            <TableCell>{formatDate(item.ngayhen)}</TableCell>
-                            <TableCell>{item.cakham.khunggio}</TableCell>
-                            <TableCell>{item.khachhang?.taikhoan?.hoten || 'N/A'}</TableCell>
-                            <TableCell>{item.nhanvien?.taikhoan?.hoten || 'N/A'}</TableCell>
-                            <TableCell>
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(item.trangthai || 'chờ xác nhận')}`}>
-                                    {item.trangthai || 'Chờ xác nhận'}
-                                </span>
-                            </TableCell>
-                            <TableCell>{item.ghichu || '-'}</TableCell>
-                            <TableCell>
-                                <div className="flex space-x-2">
-                                    {getActionButtons(item)}
-                                </div>
-                            </TableCell>
+        <>
+            <div className="rounded-md border">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Ngày hẹn</TableHead>
+                            <TableHead>Ca khám</TableHead>
+                            <TableHead>Khách hàng</TableHead>
+                            <TableHead>Bác sĩ</TableHead>
+                            <TableHead>Trạng thái</TableHead>
+                            <TableHead>Ghi chú</TableHead>
+                            <TableHead>Thao tác</TableHead>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </div>
+                    </TableHeader>
+                    <TableBody>
+                        {data.map((item) => (
+                            <TableRow key={item.id_lichhen}>
+                                <TableCell>{formatDate(item.ngayhen)}</TableCell>
+                                <TableCell>{item.cakham.khunggio}</TableCell>
+                                <TableCell>{item.khachhang?.taikhoan?.hoten || 'N/A'}</TableCell>
+                                <TableCell>{item.nhanvien?.taikhoan?.hoten || 'Chưa chọn bác sĩ'}</TableCell>
+                                <TableCell>
+                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(item.trangthai || 'chờ xác nhận')}`}>
+                                        {item.trangthai || 'Chờ xác nhận'}
+                                    </span>
+                                </TableCell>
+                                <TableCell>{item.ghichu || '-'}</TableCell>
+                                <TableCell>
+                                    <div className="flex space-x-2">
+                                        {getActionButtons(item)}
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
+            {selectedBookingId && (
+                <UpdateBookingDialog
+                    open={isUpdateDialogOpen}
+                    onOpenChange={setIsUpdateDialogOpen}
+                    bookingId={selectedBookingId}
+                    currentBooking={data.find(item => item.id_lichhen === selectedBookingId)}
+                    onSuccess={() => {
+                        setSelectedBookingId(null);
+                        // Refresh the data if needed
+                        if (typeof window !== 'undefined') {
+                            window.location.reload();
+                        }
+                    }}
+                />
+            )}
+        </>
     );
 }
