@@ -18,7 +18,10 @@ export const thongtinkhamBenhApi = {
         const response = await apiClient.get<ThongTinKhamBenh[]>(`${API_ENDPOINT}/benhan/${id_benhan}`)
         return response.data
     },
-
+    getThongTinKhamBenhBenhAnCuaToi: async (id_benhan: number) => {
+        const response = await apiClient.get<ThongTinKhamBenh[]>(`/api/thongtinkhambenh/cua-toi/${id_benhan}`)
+        return response.data
+    },
     getDetailById: async (id: number) => {
         const response = await apiClient.get<ThongTinKhamBenhDetail>(`${API_ENDPOINT}/${id}`)
         return response.data

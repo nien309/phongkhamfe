@@ -10,13 +10,13 @@ export default function ChuyenKhoaPage() {
   const [chuyenkhoas, setChuyenkhoas] = useState<Khoa[]>([]) // Mảng chứa danh sách chuyên khoa, kiểu Khoa[]
   const [loading, setLoading] = useState(true) // Boolean để xác định trạng thái loading
 
-  useEffect(() => {
+  useEffect(() => { //Sử dụng useEffect để fetch dữ liệu khi component moun
     const fetchChuyenKhoas = async () => {
       try {
-        const data = await chuyenkhoaApi.getAll()
+        const data = await chuyenkhoaApi.getAll() //Gọi API chuyenkhoaApi.getAll() để lấy danh sách chuyên khoa
         setChuyenkhoas(data)
       } catch (error) {
-        console.error("Error fetching chuyen khoa:", error)
+        console.error("Error fetching chuyen khoa:", error) //Xử lý kết quả/thất bại và cập nhật state tương ứng
       } finally {
         setLoading(false)
       }
@@ -69,19 +69,7 @@ export default function ChuyenKhoaPage() {
         ))}
       </div>
 
-      {/* Additional Info Section
-      <div className="mt-16 text-center">
-        <h2 className="text-2xl font-bold mb-4">Đặt Lịch Khám</h2>
-        <p className="text-gray-600 mb-6">
-          Liên hệ với chúng tôi để  với bác sĩ chuyên khoa
-        </p>
-        <a
-          href="/dat-lich"
-          className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          Đặt lịch ngay
-        </a>
-      </div> */}
+      
     </div>
   )
 }

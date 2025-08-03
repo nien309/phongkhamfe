@@ -83,7 +83,7 @@ export default function ForgotPasswordForm() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email quản trị"
+                placeholder="Nhap email của bạn..."
                 required //bắt buộc nhập email
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 disabled={isLoading}

@@ -12,5 +12,9 @@ export const hosobenhanApi = {
     findBySdt: async (sdt: string) => {
         const response = await apiClient.post<HosoBenhAn>(`${API_ENDPOINT}/search-by-phone`, {sdt: sdt})
         return response.data
+    },
+    getHoSoBenhAnCuaToi: async () => {
+        const response = await apiClient.get<HosoBenhAn>(`/api/hoso-benh-an-cua-toi`)
+        return response.data
     }
 }

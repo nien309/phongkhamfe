@@ -20,15 +20,15 @@ interface LichHenTableProps {
 }
 
 export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
-    const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
-    const [selectedBookingId, setSelectedBookingId] = useState<number | null>(null);
-    const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+    const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({}); //theo dõi trạng thái loading của từng nút
+    const [selectedBookingId, setSelectedBookingId] = useState<number | null>(null); //lưu id lịch hẹn đc chọn
+    const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false); 
     const {user} = useAuth();
 
     // Function to check if a date is today
     const isDateToday = (dateString: string) => {
-        const today = new Date();
-        const date = new Date(dateString);
+        const today = new Date(); //ktra ngày hiện tại
+        const date = new Date(dateString); //định dạng ngày tháng
         return date.getDate() === today.getDate() &&
             date.getMonth() === today.getMonth() &&
             date.getFullYear() === today.getFullYear();
@@ -60,7 +60,7 @@ export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
     };
 
     // Function to handle status update with loading state
-    const handleStatusUpdate = async (id: number, newStatus: string) => {
+    const handleStatusUpdate = async (id: number, newStatus: string) => { //xử lý cập nhật trạng thái
         const loadingKey = `${id}-${newStatus}`;
         setLoadingStates(prev => ({ ...prev, [loadingKey]: true }));
         
@@ -71,12 +71,12 @@ export function LichHenTable({ data, onUpdateStatus }: LichHenTableProps) {
         }
     };
 
-    const handleOpenUpdateDialog = (id: number) => {
+    const handleOpenUpdateDialog = (id: number) => { //mở dialog cập nhật lịch hẹn
         setSelectedBookingId(id);
         setIsUpdateDialogOpen(true);
     };
 
-    // Function to determine which action buttons to show based on current status
+    // 
     const getActionButtons = (item: LichHenResponse) => {
         const currentStatus = item.trangthai || 'chờ xác nhận';
         

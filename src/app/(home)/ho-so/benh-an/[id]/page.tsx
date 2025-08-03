@@ -8,22 +8,21 @@ import { benhanApi } from "@/lib/api/benhan";
 import { thongtinkhamBenhApi } from "@/lib/api/thongtinbenhan";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { ThongTinKhamBenhFormDialog } from "@/components/thongtinkhambenh/ThongTinKhamBenhFormDialog";
-import { CreateThongTinKhamBenhFormValues } from "@/lib/validations/thongtinkhambenh";
 import { format } from "date-fns";
-import { Eye, PencilIcon, PlusIcon } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 
 export default function BenhAnDetailPage() {
   const params = useParams();
+  const router = useRouter();
+  const { user } = useAuth();
   const [benhAn, setBenhAn] = useState<BenhAn | null>(null);
   const [thongTinKhamBenh, setThongTinKhamBenh] = useState<ThongTinKhamBenh[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState<ThongTinKhamBenh | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,61 +30,30 @@ export default function BenhAnDetailPage() {
         setLoading(true);
         const [benhAnData, thongTinKhamBenhData] = await Promise.all([
           benhanApi.getById(Number(params.id)),
-          thongtinkhamBenhApi.getByBenhAn(Number(params.id))
+          thongtinkhamBenhApi.getThongTinKhamBenhBenhAnCuaToi(Number(params.id))
         ]);
+
+      
         setBenhAn(benhAnData);
         setThongTinKhamBenh(thongTinKhamBenhData);
         setError(null);
       } catch (err) {
-        setError("Failed to fetch data");
+        setError("Không thể tải thông tin bệnh án");
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
-  }, [params.id]);
-
-  const handleCreate = async (data: CreateThongTinKhamBenhFormValues) => {
-    try {
-        console.log(data);
-      const newRecord = await thongtinkhamBenhApi.create(data);
-      setThongTinKhamBenh([...thongTinKhamBenh, newRecord]);
-    } catch (error) {
-      console.error("Failed to create record:", error);
+    if (user) {
+      fetchData();
     }
-  };
-
-  const handleUpdate = async (data: CreateThongTinKhamBenhFormValues) => {
-    if (!selectedRecord) return;
-    try {
-      const updatedRecord = await thongtinkhamBenhApi.update(selectedRecord.id_thongtinkhambenh, data);
-      setThongTinKhamBenh(thongTinKhamBenh.map(record => 
-        record.id_thongtinkhambenh === updatedRecord.id_thongtinkhambenh ? updatedRecord : record
-      ));
-    } catch (error) {
-      toast.error("Lịch sử khám bệnh đã hoàn thành, không thể cập nhật");
-      console.error("Failed to update record:", error);
-    }
-  };
-
-  const handleEdit = (record: ThongTinKhamBenh) => {
-    setSelectedRecord(record);
-    setOpenDialog(true);
-  };
-
-  const handleOpenChange = (open: boolean) => {
-    setOpenDialog(open);
-    if (!open) {
-      setSelectedRecord(undefined);
-    }
-  };
+  }, [params.id, user, router]);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading...</div>
+        <div className="w-6 h-6 border-t-2 border-b-2 border-gray-900 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -101,7 +69,7 @@ export default function BenhAnDetailPage() {
   if (!benhAn) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Benh an not found</div>
+        <div className="text-lg">Không tìm thấy bệnh án</div>
       </div>
     );
   }
@@ -124,13 +92,13 @@ export default function BenhAnDetailPage() {
               </div>
             </div>
 
-            <div>
-              <h3 className="font-semibold mb-2">Thông tin khoa và nhân viên</h3>
+            {/* <div>
+              <h3 className="font-semibold mb-2">Thông tin khoa và bác sĩ</h3>
               <div className="space-y-2">
                 <p><span className="font-medium">Khoa:</span> {benhAn.khoa?.tenkhoa || "N/A"}</p>
-                <p><span className="font-medium">Nhân viên phụ trách:</span> {benhAn.nhanvien?.taikhoan?.hoten || "N/A"}</p>
+                <p><span className="font-medium">Bác sĩ phụ trách:</span> {benhAn.nhanvien?.taikhoan?.hoten || "N/A"}</p>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div>
@@ -146,12 +114,8 @@ export default function BenhAnDetailPage() {
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader>
           <CardTitle>Lịch sử khám bệnh</CardTitle>
-          <Button onClick={() => setOpenDialog(true)} size="sm">
-            <PlusIcon className="h-4 w-4 mr-2" />
-            Thêm mới
-          </Button>
         </CardHeader>
         <CardContent>
           {thongTinKhamBenh.length === 0 ? (
@@ -164,7 +128,7 @@ export default function BenhAnDetailPage() {
                   <TableHead>Triệu chứng</TableHead>
                   <TableHead>Chẩn đoán</TableHead>
                   <TableHead>Trạng thái</TableHead>
-                  <TableHead className="w-[100px]">Thao tác</TableHead>
+                  <TableHead>Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -175,23 +139,13 @@ export default function BenhAnDetailPage() {
                     <TableCell>{item.chandoan}</TableCell>
                     <TableCell>{item.trangthai}</TableCell>
                     <TableCell>
-                      <div className="flex items-center">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEdit(item)}
-                      >
-                        <PencilIcon className="h-4 w-4" />
-                      </Button>
-                        <Link href={`/admin/benh-an/${params.id}/thong-tin-kham-benh/${item.id_thongtinkhambenh}`}>
-                        <Button
-                        variant="ghost"
-                        size="sm"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
+
+                        <Link href={`/ho-so/benh-an/${params.id}/thong-tin-kham-benh/${item.id_thongtinkhambenh}`}>
+                            <Button variant="ghost" size="sm">
+                                <Eye className="h-4 w-4" />
+                            </Button>
                         </Link>
-                      </div>
+  
                     </TableCell>
                   </TableRow>
                 ))}
@@ -200,14 +154,6 @@ export default function BenhAnDetailPage() {
           )}
         </CardContent>
       </Card>
-
-      <ThongTinKhamBenhFormDialog
-        open={openDialog}
-        onOpenChange={handleOpenChange}
-        defaultValues={selectedRecord}
-        onSubmit={selectedRecord ? handleUpdate : handleCreate}
-        id_benhan={Number(params.id)}
-      />
     </div>
   );
 }

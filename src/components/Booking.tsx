@@ -92,9 +92,9 @@ export default function Booking() {
       
       toast.success("Đặt lịch thành công");
       form.reset();
-    } catch (error) {
+    } catch (error:any) {
       console.error("Error creating appointment:", error);
-      toast.error("Đặt lịch thất bại");
+      toast.error(`Đặt lịch thất bại: ${error.response.data.error}`);
     } finally {
       setSubmitting(false);
     }

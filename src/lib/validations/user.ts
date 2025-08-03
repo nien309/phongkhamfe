@@ -13,12 +13,14 @@ export const userSchema = z.object({
   loai_taikhoan: z.string().min(1, "Loại tài khoản không được để trống"),
   phan_quyen: z.string().optional()
 }).refine((data) => {
+  // If either password field is provided, both must match
   if (data.matkhau || data.matkhau_confirmation) {
     return data.matkhau === data.matkhau_confirmation;
   }
+  // If neither password field is provided, that's ok
   return true;
 }, {
-  message: "Mật khẩu không khớp",
+  message: "Mật khẩu xác nhận không khớp",
   path: ["matkhau_confirmation"]
 })
 export const userSchemaWithoutPassword = z.object({
@@ -43,6 +45,16 @@ export const registerSchema = z.object({
   ngaysinh: z.string(),
   nghenghiep: z.string().min(1, "Nghe nghiệp không được để trống"),
   diachi: z.string().min(1, "Địa chỉ không được để trống"),
+}).refine((data) => {
+  // If either password field is provided, both must match
+  if (data.matkhau || data.matkhau_confirmation) {
+    return data.matkhau === data.matkhau_confirmation;
+  }
+  // If neither password field is provided, that's ok
+  return true;
+}, {
+  message: "Mật khẩu xác nhận không khớp",
+  path: ["matkhau_confirmation"]
 })
 export type UserSchemaWithoutPassword = z.infer<typeof userSchemaWithoutPassword>
 export type UserFormValues = z.infer<typeof userSchema> 

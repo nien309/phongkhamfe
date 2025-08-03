@@ -17,12 +17,16 @@ export const lichhenApi = {
     const response = await apiClient.get<LichHenResponse[]>(`/api/lichhen/bacsi/${id}`)
     return response.data
   },
+  getLichHenCuaToi: async () => {
+    const response = await apiClient.get<LichHenResponse[]>(`/api/lich-hen-cua-toi`)
+    return response.data
+  },
   updateTrangThai: async (id: number, data: { trangthai: string }) => {
     const response = await apiClient.patch<LichHenResponse>(`${API_ENDPOINT}/capnhat-trangthai/${id}`, data)
     return response.data
   },
   updateThongTin: async (id: number, data: UpdateBookingFormValues) => {
-    const response = await apiClient.patch<LichHenResponse>(`api/lichhen/chuyenBacSi/${id}`, data)
+    const response = await apiClient.put<LichHenResponse>(`api/lichhen/chuyenBacSi/${id}`, data)
     return response.data
   },
   createLichTaiKham: async (data: BookingFormSchemaTaiKham) => {

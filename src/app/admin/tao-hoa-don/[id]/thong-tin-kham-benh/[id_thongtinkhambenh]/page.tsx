@@ -158,7 +158,7 @@ export default function ThongTinKhamBenhDetailPage() {
                 <SelectContent>
                   <SelectItem value="tien_mat">Tiền mặt</SelectItem>
                   <SelectItem value="chuyen_khoan">Chuyển khoản</SelectItem>
-                  <SelectItem value="the">Thẻ</SelectItem>
+                  <SelectItem value="vi_dien_tu">Ví điện tử</SelectItem>
                 </SelectContent>
               </Select>
             </div>

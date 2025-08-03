@@ -91,7 +91,7 @@ export default function HoaDonPage() {
     const methodLabels: Record<string, string> = {
       tien_mat: "Tiền mặt",
       chuyen_khoan: "Chuyển khoản",
-      the: "Thẻ",
+      vi_dien_tu: "Ví điện tử",
     }
     return methodLabels[method] || method
   }
