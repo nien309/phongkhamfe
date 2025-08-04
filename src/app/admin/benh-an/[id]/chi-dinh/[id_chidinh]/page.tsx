@@ -16,6 +16,7 @@ import {
 import { chiDinhApi } from "@/lib/api/chidinh"
 import { ChiDinh } from "@/types/chidinh"
 
+//đ/n props nhận vào là một Promise chứa params với id_chidinh (còn lại là id_khachhang)
 interface ChiDinhViewPageProps {
   params: Promise<{
     id: string;
@@ -33,7 +34,7 @@ export default function ChiDinhViewPage({ params }: ChiDinhViewPageProps) {
     const fetchChiDinh = async () => {
       try {
         setLoading(true)
-        const data = await chiDinhApi.getById(Number(id_chidinh))
+        const data = await chiDinhApi.getById(Number(id_chidinh)) //gọi api chi định theo id_chidinh
         setChiDinh(data)
       } catch (error: any) {
         toast.error(`Có lỗi xảy ra khi tải thông tin chỉ định: ${error.response?.data?.message || 'Có lỗi xảy ra'}`)
@@ -114,7 +115,8 @@ export default function ChiDinhViewPage({ params }: ChiDinhViewPageProps) {
               <div className="text-sm font-medium text-gray-500">Trạng thái</div>
               <div>{chiDinh.trangthai}</div>
             </div>
-            <div className="col-span-2">
+             {/* col-span-2: Chiếm cả 2 cột */}
+            <div className="col-span-2"> 
               <div className="text-sm font-medium text-gray-500">Kết quả</div>
               <div>{chiDinh.ketqua || '-'}</div>
             </div>

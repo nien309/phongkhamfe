@@ -13,6 +13,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -25,6 +26,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
+import toast from "react-hot-toast";
+import { thongtinkhamBenhApi } from "@/lib/api/thongtinbenhan";
 
 interface ThongTinKhamBenhFormDialogProps {
   open: boolean;
@@ -41,8 +44,10 @@ export function ThongTinKhamBenhFormDialog({
   onSubmit,
   id_benhan,
 }: ThongTinKhamBenhFormDialogProps) {
-  const [loading, setLoading] = useState(false);
   
+  const isEditing = !!thongtinkhamBenhApi;
+  const [loading, setLoading] = useState(false);
+  // const {user} = useAuth()
   const form = useForm<CreateThongTinKhamBenhFormValues>({
     resolver: zodResolver(createThongTinKhamBenhSchema),
     defaultValues: {
@@ -72,7 +77,8 @@ export function ThongTinKhamBenhFormDialog({
       await onSubmit(data);
       form.reset();
       onOpenChange(false);
-    } catch (error) {
+    } catch (error:any) {
+      toast.error(error.response?.data.message || "Không được thêm mới thông tin khám bệnh"); 
       console.error("Failed to submit form:", error);
     } finally {
       setLoading(false);
@@ -81,7 +87,17 @@ export function ThongTinKhamBenhFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
+
+      {/* <DialogTrigger asChild>
+        {trigger || user?.nhanvien?.chucvu != 'dieuduong' && (
+          <Button variant={isEditing ? "outline" : "default"}>
+            {isEditing ? "Cập nhật bệnh án" : "Thêm bệnh án"}
+          </Button>
+        )}
+      </DialogTrigger> */}
+
       <DialogContent className="sm:max-w-[500px]">
+        
         <DialogHeader>
           <DialogTitle>
             {defaultValues ? "Cập nhật thông tin khám bệnh" : "Thêm thông tin khám bệnh"}
@@ -144,6 +160,8 @@ export function ThongTinKhamBenhFormDialog({
                 ) : (
                   defaultValues ? "Cập nhật" : "Thêm mới"
                 )}
+
+
               </Button>
             </DialogFooter>
           </form>

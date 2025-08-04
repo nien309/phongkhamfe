@@ -35,6 +35,8 @@ import { CalendarIcon } from "lucide-react"
 import { createBenhAnSchema, type CreateBenhAnFormValues } from "@/lib/validations/benhan"
 import { benhanApi } from "@/lib/api/benhan"
 import { BenhAn } from "@/types/benhan"
+import toast from "react-hot-toast"
+import { useAuth } from "@/context/AuthContext"
 
 interface BenhAnFormDialogProps {
   hoSoBenhAnId: number
@@ -51,9 +53,8 @@ export function BenhAnFormDialog({
 }: BenhAnFormDialogProps) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-
   const isEditing = !!benhAn
-
+  const {user} = useAuth() // Assuming you have a useAuth hook to get user info
   const form = useForm<CreateBenhAnFormValues>({
     resolver: zodResolver(createBenhAnSchema),
     defaultValues: {
@@ -76,6 +77,7 @@ export function BenhAnFormDialog({
   }, [benhAn, form])
 
   const onSubmit = async (data: CreateBenhAnFormValues) => {
+    
     try {
       setLoading(true)
       if (isEditing && benhAn) {
@@ -86,7 +88,8 @@ export function BenhAnFormDialog({
       setOpen(false)
       onSuccess?.()
       form.reset()
-    } catch (error) {
+    } catch (error:any) { //tbao
+      toast.error(error.response?.data.message || "Lỗi khi lưu bệnh án") //tbao
       console.error("Error saving medical examination:", error)
     } finally {
       setLoading(false)
@@ -95,8 +98,9 @@ export function BenhAnFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      {/* DialogTrigger: dùng hiện thông báo */}
       <DialogTrigger asChild>
-        {trigger || (
+        {trigger || user?.nhanvien?.chucvu != 'dieuduong' && (
           <Button variant={isEditing ? "outline" : "default"}>
             {isEditing ? "Cập nhật bệnh án" : "Thêm bệnh án"}
           </Button>
@@ -105,7 +109,7 @@ export function BenhAnFormDialog({
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>
-            {isEditing ? "Cập nhật bệnh án" : "Thêm bệnh án mới"}
+            {isEditing ? "Cập nhật bệnh án" : "Thêm bệnh án mới" }
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -135,6 +139,7 @@ export function BenhAnFormDialog({
                   <FormLabel>Mô tả</FormLabel>
                   <FormControl>
                     <Textarea
+
                       placeholder="Nhập mô tả chi tiết..."
                       className="resize-none"
                       {...field}

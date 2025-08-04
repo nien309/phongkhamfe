@@ -12,6 +12,9 @@ export const toaThuocSchema = z.object({
     id_thongtinkhambenh: z.number(),
     chandoan: z.string().min(1, "Chẩn đoán không được để trống"),
     ngaychandoan: z.string().min(1, "Ngày chẩn đoán không được để trống"),
+    // ngaychandoan: z.date().max(new Date(), "Ngày chẩn đoán không được ở tương lai")
+    // chi_tiet: z.array(chiTietToaThuocSchema).min(1, "Toa thuốc phải có ít nhất 1 loại thuốc")
+    // so_luong: z.number().min(1).max(100, "Số lượng không được vượt quá 100")
 })
 
 export type CreateToaThuocFormValues = z.infer<typeof toaThuocSchema>

@@ -14,21 +14,25 @@ export default function DichVuPage() {
   const [dichvus, setDichVus] = useState<DichVu[]>([]);
   const [khoas, setKhoas] = useState<Khoa[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  //phân trang bắt đầu
   const [paginationLoading, setPaginationLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [perPage, setPerPage] = useState(10);
-
+//phân trang kết thúc
   useEffect(() => {
     fetchData();
   }, []);
 
+  //phân trang bắt đầu
   useEffect(() => {
-    if (!loading) { // Only trigger on pagination changes after initial load
+    if (!loading) { 
       handlePaginationChange();
     }
   }, [currentPage, perPage]);
+//phân trang kthuc
 
   const handlePaginationChange = async () => {
     setPaginationLoading(true);
@@ -62,6 +66,7 @@ export default function DichVuPage() {
     }
   };
 
+  //phân trang bắt đâu
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
@@ -73,7 +78,7 @@ export default function DichVuPage() {
     setPerPage(newPerPage);
     setCurrentPage(1); // Reset to first page when changing items per page
   };
-
+//phân trang kthuc
   const handleDelete = async (id: number) => {
     try {
       await dichVuApi.delete(id);
@@ -184,7 +189,7 @@ export default function DichVuPage() {
         </table>
       </div>
 
-      {/* Pagination Controls */}
+      {/* phân trang bdau */}
       <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-700">Hiển thị</span>
@@ -224,6 +229,8 @@ export default function DichVuPage() {
           </div>
         </div>
       </div>
+        {/* phân trang kthuc */}
+
 
       {/* Loading Overlay */}
       {paginationLoading && (

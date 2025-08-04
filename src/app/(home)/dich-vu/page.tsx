@@ -62,11 +62,8 @@ export default function DichVuPage() {
 
 
 // handlePageChange: Thay đổi trang hiện tại với validation
-
 // handlePerPageChange: Thay đổi số item mỗi trang và reset về trang 1
-
 // getKhoaName: Lấy tên khoa từ ID
-
 //formatCurrency: Định dạng tiền tệ VND
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {

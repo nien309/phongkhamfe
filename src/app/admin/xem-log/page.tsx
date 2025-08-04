@@ -106,19 +106,19 @@ export default function LogPage() {
             className="w-full border rounded-lg px-3 py-2"
           >
             <option value="">Tất cả</option>
-            <option value="dich_vus">Dịch vụ</option>
+            {/* <option value="dich_vus">Dịch vụ</option> */}
             <option value="benhan">Bệnh án</option>
-            <option value="cakham">Ca khám</option>
-            <option value="chi_tiet_toa_thuoc">Chi tiết toa thuốc</option>
+            {/* <option value="cakham">Ca khám</option> */}
+            {/* <option value="chi_tiet_toa_thuoc">Chi tiết toa thuốc</option> */}
             <option value="chidinh">Chỉ định</option>
             <option value="hoadon">Hóa đơn</option>
             <option value="hosobenhan">Hồ sơ bệnh án</option>
-            <option value="khach_hangs">Khách hàng</option>
-            <option value="khoas">Khoa</option>
+            {/* <option value="khach_hangs">Khách hàng</option> */}
+            {/* <option value="khoas">Khoa</option> */}
             <option value="lich_dang_ky_lam_viec">Lịch đăng ký làm việc</option>
             <option value="lich_lam_viec">Lịch làm việc</option>
-            <option value="lichhen">Lịch hẹn</option>
-            <option value="nhan_viens">Nhân viên</option>
+            {/* <option value="lichhen">Lịch hẹn</option> */}
+            {/* <option value="nhan_viens">Nhân viên</option> */}
             <option value="taikhoan">Tài khoản</option>
             <option value="thongtinkhambenh">Thông tin khám bệnh</option>
             <option value="toathuoc">Toa thuốc</option>

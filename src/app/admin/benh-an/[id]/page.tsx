@@ -18,7 +18,9 @@ import toast from "react-hot-toast";
 
 export default function BenhAnDetailPage() {
   const params = useParams();
+  //lưu thông tin bệnh án và lịch sử khám bệnh
   const [benhAn, setBenhAn] = useState<BenhAn | null>(null);
+  //Lưu danh sách thông tin khám bệnh
   const [thongTinKhamBenh, setThongTinKhamBenh] = useState<ThongTinKhamBenh[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,6 +31,7 @@ export default function BenhAnDetailPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        // Gọi API song song để lấy thông tin bệnh án và lịch sử khám
         const [benhAnData, thongTinKhamBenhData] = await Promise.all([
           benhanApi.getById(Number(params.id)),
           thongtinkhamBenhApi.getByBenhAn(Number(params.id))
@@ -37,7 +40,7 @@ export default function BenhAnDetailPage() {
         setThongTinKhamBenh(thongTinKhamBenhData);
         setError(null);
       } catch (err) {
-        setError("Failed to fetch data");
+        setError("Không thể xem chi tiết bệnh án của khoa khác");
         console.error(err);
       } finally {
         setLoading(false);
@@ -45,14 +48,16 @@ export default function BenhAnDetailPage() {
     };
 
     fetchData();
-  }, [params.id]);
+  }, [params.id]); // Chạy lại khi params.id thay đổi
 
+  // Hàm xử lý tạo và cập nhật thông tin khám bệnh
   const handleCreate = async (data: CreateThongTinKhamBenhFormValues) => {
     try {
         console.log(data);
       const newRecord = await thongtinkhamBenhApi.create(data);
       setThongTinKhamBenh([...thongTinKhamBenh, newRecord]);
-    } catch (error) {
+    } catch (error: any) { //them tbao
+      toast.error(error.response?.data.message || "Không được thêm mới thông tin khám bệnh"); //them tbao
       console.error("Failed to create record:", error);
     }
   };
@@ -70,11 +75,12 @@ export default function BenhAnDetailPage() {
     }
   };
 
+  // Hàm xử lý mở dialog chỉnh sửa
   const handleEdit = (record: ThongTinKhamBenh) => {
     setSelectedRecord(record);
     setOpenDialog(true);
   };
-
+// Hàm xử lý mở dialog tạo mới
   const handleOpenChange = (open: boolean) => {
     setOpenDialog(open);
     if (!open) {
@@ -181,7 +187,7 @@ export default function BenhAnDetailPage() {
                         size="sm"
                         onClick={() => handleEdit(item)}
                       >
-                        <PencilIcon className="h-4 w-4" />
+                        <PencilIcon className="h-4 w-4" /> 
                       </Button>
                         <Link href={`/admin/benh-an/${params.id}/thong-tin-kham-benh/${item.id_thongtinkhambenh}`}>
                         <Button
@@ -201,6 +207,7 @@ export default function BenhAnDetailPage() {
         </CardContent>
       </Card>
 
+       {/* Dialog tạo/sửa thông tin khám bệnh */}
       <ThongTinKhamBenhFormDialog
         open={openDialog}
         onOpenChange={handleOpenChange}

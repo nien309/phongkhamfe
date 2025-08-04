@@ -40,11 +40,11 @@ export default function ChiDinhUpdatePage({ params }: ChiDinhUpdatePageProps) {
   const { id } = use(params)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [chiDinh, setChiDinh] = useState<ChiDinh | null>(null)
+  const [chiDinh, setChiDinh] = useState<ChiDinh | null>(null) //dữ liệu chỉ định lấy từ api
 
   const form = useForm<UpdateChiDinhFormValues>({
     resolver: zodResolver(updateChiDinhSchema),
-    defaultValues: {
+    defaultValues: { //giá trị mặc định ban đầu
       ketqua: "",
       hinhanh: "",
       trangthai: "hoàn thành",
@@ -55,7 +55,7 @@ export default function ChiDinhUpdatePage({ params }: ChiDinhUpdatePageProps) {
     const fetchChiDinh = async () => {
       try {
         setLoading(true)
-        const data = await chiDinhApi.getById(Number(id))
+        const data = await chiDinhApi.getById(Number(id)) // Lấy dữ liệu chỉ định từ API
         setChiDinh(data)
         
         // Set form default values
@@ -75,7 +75,7 @@ export default function ChiDinhUpdatePage({ params }: ChiDinhUpdatePageProps) {
     fetchChiDinh()
   }, [id, form])
 
-  const onSubmit = async (values: UpdateChiDinhFormValues) => {
+  const onSubmit = async (values: UpdateChiDinhFormValues) => { //gửi values đến api để cập nhật chỉ định
     try {
       setSubmitting(true)
       await chiDinhApi.update(Number(id), values)

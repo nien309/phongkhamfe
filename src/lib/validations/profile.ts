@@ -3,6 +3,7 @@ import { User } from "@/types/user";
 
 export const profileSchema = z.object({
   hoten: z.string()
+  //.trim() (laoi bỏ khoảng trắng đầu và cuối)
     .min(1, "Vui lòng nhập họ tên")
     .max(100, "Họ tên không được vượt quá 100 ký tự"),
   gioitinh: z.string()

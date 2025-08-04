@@ -66,7 +66,7 @@ export default function ChuyenKhoaDetailPage({ params }: Props) {
             <CardHeader>
               <div className="w-32 h-32 mx-auto mb-4 relative rounded-full overflow-hidden">
                 <Image
-                  src="/images/services/sieuam.png"
+                  src="/images/services/bacsi.jpg"
                   alt={doctor.taikhoan.hoten}
                   fill
                   className="object-cover"

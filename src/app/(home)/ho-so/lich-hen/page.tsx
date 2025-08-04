@@ -19,7 +19,7 @@ export default function LichHenCuaToiPage() {
 
     const fetchData = async () => {
         try {
-            const response = await lichhenApi.getLichHenCuaToi();
+            const response = await lichhenApi.getLichHenCuaToi(); //Gọi API getLichHenCuaToi() để lấy danh sách lịch hẹn
             setData(response);
             setError(null);
         } catch (err) {
@@ -33,15 +33,15 @@ export default function LichHenCuaToiPage() {
     const getStatusBadge = (status: string) => {
         switch (status) {
             case "cho_xac_nhan":
-                return <Badge variant="default">Chờ xác nhận</Badge>;
+                return <Badge variant="default">Chờ xác nhận</Badge>; // Trạng thái chờ xác nhận
             case "da_xac_nhan":
-                return <Badge variant="success">Đã xác nhận</Badge>;
+                return <Badge variant="success">Đã xác nhận</Badge>; // Trạng thái đã xác nhận
             case "da_huy":
-                return <Badge variant="destructive">Đã hủy</Badge>;
+                return <Badge variant="destructive">Đã hủy</Badge>;// Trạng thái đã hủy
             case "hoan_thanh":
-                return <Badge variant="success">Hoàn thành</Badge>;
+                return <Badge variant="success">Hoàn thành</Badge>;// Trạng thái hoàn thành
             default:
-                return <Badge variant="secondary">{status}</Badge>;
+                return <Badge variant="secondary">{status}</Badge>;//Trạng thái khác
         }
     };
 
@@ -68,9 +68,14 @@ export default function LichHenCuaToiPage() {
     }
 
     return (
-        <div className="container mx-auto py-8">
+        //container giới hạn chiều rộng và căn giữa nội dung
+        <div className="container mx-auto py-8"> 
             <Card>
-                <CardHeader>
+            {/* CardHeader: phần tiêu đề card
+            CardTitle: Tiêu đề chính
+            CardContent: Phần nội dung */}
+
+                <CardHeader> 
                     <CardTitle>Lịch hẹn của tôi</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -80,6 +85,13 @@ export default function LichHenCuaToiPage() {
                         </div>
                     ) : (
                         <Table>
+
+                            {/* hiển thị dữ liệu dạng bảng
+                            TableHeader: phần đầu bảng chứa các tiêu để cột
+                            TableHead: Tiêu đề của từng cột
+                            TableBody: Phần thân bảng chứa dữ liệu
+                            TableRow: Một hàng trong bảng
+                            TableCell: Một ô dữ liệu trong bảng */}
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Ngày hẹn</TableHead>
@@ -93,7 +105,7 @@ export default function LichHenCuaToiPage() {
                                 {data.map((lichhen) => (
                                     <TableRow key={lichhen.id_lichhen}>
                                         <TableCell>
-                                            {format(new Date(lichhen.ngayhen), "dd/MM/yyyy")}
+                                            {format(new Date(lichhen.ngayhen), "dd/MM/yyyy")} {/* Định dạng ngày tháng */}
                                         </TableCell>
                                         {/* <TableCell>
                                             {format(new Date(lichhen.ngayhen), "HH:mm")}

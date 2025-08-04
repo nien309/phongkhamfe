@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
-import { hosobenhanApi } from "@/lib/api/hosobenhan"
+import { hosobenhanApi } from "@/lib/api/hosobenhan" // Import api lấy HSBA
 import { HosoBenhAn } from "@/types/hosobenhan"
 import Link from "next/link"
 
@@ -20,7 +20,7 @@ export default function HoSoBenhAnCuaToiPage() {
   useEffect(() => {
     const fetchHoSoBenhAn = async () => {
       try {
-        const response = await hosobenhanApi.getHoSoBenhAnCuaToi()
+        const response = await hosobenhanApi.getHoSoBenhAnCuaToi() //Gọi API getHoSoBenhAnCuaToi() để lấy hồ sơ bệnh án
         setHoSoBenhAn(response)
       } catch (error) {
         console.error("Error fetching medical record:", error)
@@ -33,7 +33,7 @@ export default function HoSoBenhAnCuaToiPage() {
   }, [])
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("vi-VN")
+    return new Date(dateString).toLocaleDateString("vi-VN") //Hàm định dạng ngày tháng theo định dạng Việt Nam
   }
 
   if (loading) {

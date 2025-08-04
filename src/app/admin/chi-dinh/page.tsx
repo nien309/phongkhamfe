@@ -33,7 +33,7 @@ export default function ChiDinhPage() {
   const [selectedStatus, setSelectedStatus] = useState<string>("all")
 
   useEffect(() => {
-    fetchChiDinh()
+    fetchChiDinh() 
   }, [])
 
   const fetchChiDinh = async () => {
@@ -54,6 +54,7 @@ export default function ChiDinhPage() {
       cho_thuc_hien: { label: "Chờ thực hiện", variant: "secondary" },
       hoan_thanh: { label: "Hoàn thành", variant: "outline" },
     }
+
 
     const config = statusConfig[status] || { label: status, variant: "outline" }
     return <Badge variant={config.variant}>{config.label}</Badge>
@@ -116,6 +117,14 @@ export default function ChiDinhPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
+                {/* hiển thị khi ko có dữ liệu */}
+                {filteredChiDinh.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={9} className="text-center py-6 text-gray-500">
+                      Không có chỉ định nào.
+                    </TableCell>
+                  </TableRow>
+                )}
                 {filteredChiDinh.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="text-center py-6 text-gray-500">

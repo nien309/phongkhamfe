@@ -24,7 +24,7 @@ import toast from "react-hot-toast";
 import { TaoLichTaiKhamDialog } from "@/components/lichhen/TaoLichTaiKhamDialog";
 
 export default function ThongTinKhamBenhDetailPage() {
-  const params = useParams();
+  const params = useParams(); //lấy param từ URL
   const [thongTinKhamBenh, setThongTinKhamBenh] = useState<ThongTinKhamBenhDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +42,7 @@ export default function ThongTinKhamBenhDetailPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
+         // Gọi API lấy chi tiết thông tin khám bệnh
         const data = await thongtinkhamBenhApi.getDetailById(Number(params.id_thongtinkhambenh));
         setThongTinKhamBenh(data);
         setError(null);
@@ -54,8 +55,10 @@ export default function ThongTinKhamBenhDetailPage() {
     };
 
     fetchData();
-  }, [params.id_thongtinkhambenh]);
+  }, [params.id_thongtinkhambenh]);// Chạy lại khi id_thongtinkhambenh thay đổi
 
+
+  // Hàm xử lý tạo toa thuốc
   const handleCreateToaThuoc = async (data: CreateToaThuocFormValues) => {
     try {
       const newToaThuoc = await toaThuocApi.create(data);
@@ -68,9 +71,10 @@ export default function ThongTinKhamBenhDetailPage() {
     }
   };
 
+  // Hàm xử lý tạo chi tiết toa thuốc (thêm/sửa)
   const handleCreateChiTietToaThuoc = async (data: ChiTietToaThuocFormValues) => {
     try {
-      // Refresh the data to get the updated prescription details
+      // Refresh lại dữ liệu sau khi thêm/sửa
       const updatedData = await thongtinkhamBenhApi.getDetailById(Number(params.id_thongtinkhambenh));
       setThongTinKhamBenh(updatedData);
       setSelectedChiTietThuoc(undefined);
@@ -79,14 +83,17 @@ export default function ThongTinKhamBenhDetailPage() {
     }
   };
 
+  //chọn chi tiết toa thuốc để sửa
   const handleEditChiTietThuoc = (chiTietThuoc: ChiTietToaThuoc) => {
     setSelectedChiTietThuoc(chiTietThuoc);
     setOpenChiTietThuocDialog(true);
   };
 
+
+  // Hàm xử lý tạo/ sửa chỉ định
   const handleCreateChiDinh = async (data: ChiDinhFormValues) => {
     try {
-      // Refresh the data to get the updated medical orders
+      /// Refresh lại dữ liệu sau khi thêm/sửa
       const updatedData = await thongtinkhamBenhApi.getDetailById(Number(params.id_thongtinkhambenh));
       setThongTinKhamBenh(updatedData);
       setSelectedChiDinh(undefined);
@@ -95,17 +102,21 @@ export default function ThongTinKhamBenhDetailPage() {
     }
   };
 
+  //chọn chỉ định để sửa
   const handleEditChiDinh = (chiDinh: ChiDinh) => {
     setSelectedChiDinh(chiDinh);
     setOpenChiDinhDialog(true);
   };
+
   const handleHoanThanh = async () => {
     try {
       setSubmitting(true)
+      // Kiểm tra xem tất cả chỉ định đã hoàn thành chưa
       if(!checkChiDinhHoanThanh()){
         toast.error("Vui lòng hoàn thành tất cả chỉ định trước khi hoàn thành khám bệnh");
         return;
       }
+      // Cập nhật trạng thái khám bệnh thành "hoàn thành"
       await thongtinkhamBenhApi.update(Number(params.id_thongtinkhambenh), { trangthai: "da_hoan_thanh" });
       toast.success("Hoàn thành khám bệnh thành công");
       router.push(`/admin/benh-an/${params.id}`);
@@ -118,6 +129,7 @@ export default function ThongTinKhamBenhDetailPage() {
     }
   };
 
+  // Kiểm tra xem tất cả chỉ định đã hoàn thành hay chưa
   const checkChiDinhHoanThanh = () => {
     if(thongTinKhamBenh && thongTinKhamBenh.chidinh && thongTinKhamBenh.chidinh.length > 0){
       return thongTinKhamBenh.chidinh.every(item => item.trangthai === "hoàn thành");
@@ -137,6 +149,7 @@ export default function ThongTinKhamBenhDetailPage() {
     }
   };
 
+  // Hàm xử lý in toa thuốc
   const handlePrint = () => {
     const printContent = document.createElement('div');
     if (printRef.current) {
@@ -220,6 +233,7 @@ export default function ThongTinKhamBenhDetailPage() {
         </div>
       `;
       
+      // Mở cửa sổ in mới và in nội dung
       const printWindow = window.open('', '_blank');
       if (printWindow) {
         printWindow.document.write(printContent.innerHTML);
@@ -273,7 +287,8 @@ export default function ThongTinKhamBenhDetailPage() {
             {thongTinKhamBenh.trangthai === "dang_kham" ? "Đang khám" :
              thongTinKhamBenh.trangthai === "hoan_thanh" ? "Hoàn thành" :
              thongTinKhamBenh.trangthai === "da_huy" ? "Đã hủy" : thongTinKhamBenh.trangthai}
-          </Badge>
+          </Badge> 
+          
           {!thongTinKhamBenh.toathuoc && (
             <Button variant="outline" size="sm" onClick={() => setOpenToaThuocDialog(true)}>
               <Plus className="h-4 w-4 mr-2" />
@@ -319,6 +334,7 @@ export default function ThongTinKhamBenhDetailPage() {
                 <span>Toa thuốc</span>
                 <div className="flex gap-2">
                   <Button 
+                  // nút in toa thuốc
                     variant="outline" 
                     size="sm"
                     onClick={handlePrint}
@@ -327,6 +343,7 @@ export default function ThongTinKhamBenhDetailPage() {
                     In toa thuốc
                   </Button>
                   <Button 
+                  // nút thêm thuốc
                     variant="outline" 
                     size="sm"
                     onClick={() => setOpenChiTietThuocDialog(true)}
@@ -388,6 +405,7 @@ export default function ThongTinKhamBenhDetailPage() {
           <CardTitle>
             <div className="flex justify-between items-center">
               <span>Chỉ định</span>
+              {/* nút thêm chỉ định (chỉ hiện khi đang khám) */}
               {thongTinKhamBenh.trangthai === "dang_kham" && (
                 <Button 
                   variant="outline" 
@@ -417,7 +435,7 @@ export default function ThongTinKhamBenhDetailPage() {
             {thongTinKhamBenh.chidinh && thongTinKhamBenh.chidinh.length > 0 && (
               <TableBody>
                 {thongTinKhamBenh.chidinh.map((item) => (
-                  <TableRow key={item.id_chidinh}>
+                  <TableRow key={item.id_chidinh}> 
                     <TableCell>{item.id_chidinh}</TableCell>
                     <TableCell>{item.dichvu.tendichvu}</TableCell>
                     <TableCell>{item.soluong}</TableCell>
@@ -492,6 +510,8 @@ export default function ThongTinKhamBenhDetailPage() {
           </Button>
         </div>
       )}
+
+      {/* Dialog tạo/sửa toa thuốc */}
       <ToaThuocFormDialog
         open={openToaThuocDialog}
         onOpenChange={setOpenToaThuocDialog}
@@ -500,6 +520,7 @@ export default function ThongTinKhamBenhDetailPage() {
         chandoan={thongTinKhamBenh.chandoan}
       />
 
+      {/* Dialog chi tiết toa thuốc */}
       {thongTinKhamBenh.toathuoc && (
         <ChiTietThuocFormDialog
           open={openChiTietThuocDialog}
@@ -512,7 +533,7 @@ export default function ThongTinKhamBenhDetailPage() {
           defaultValues={selectedChiTietThuoc}
         />
       )}
-
+ {/* Dialog tạo/sửa chỉ định */}
       <ChiDinhFormDialog
         open={openChiDinhDialog}
         onOpenChange={(open) => {
@@ -524,6 +545,7 @@ export default function ThongTinKhamBenhDetailPage() {
         defaultValues={selectedChiDinh}
       />
       
+      {/*  Dialog tạo lịch tái khám */}
       <TaoLichTaiKhamDialog
         open={openLichTaiKhamDialog}
         onOpenChange={setOpenLichTaiKhamDialog}

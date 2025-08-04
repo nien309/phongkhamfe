@@ -27,6 +27,8 @@ import { hosobenhanApi } from "@/lib/api/hosobenhan"
 import { HosoBenhAn } from "@/types/hosobenhan"
 import { BenhAnFormDialog } from "@/components/benhan/BenhAnFormDialog"
 import Link from "next/link"
+import toast from "react-hot-toast"
+import { useAuth } from "@/context/AuthContext"
 
 const searchSchema = z.object({
   sdt: z.string().min(10, "Số điện thoại không hợp lệ"),
@@ -37,7 +39,7 @@ type SearchFormValues = z.infer<typeof searchSchema>
 export default function HoSoBenhAnPage() {
   const [hoSoBenhAn, setHoSoBenhAn] = useState<HosoBenhAn | null>(null)
   const [loading, setLoading] = useState(false)
-
+  const {user} = useAuth() // Assuming you have a useAuth hook to get user info
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchSchema),
     defaultValues: {
@@ -51,8 +53,9 @@ export default function HoSoBenhAnPage() {
       const response = await hosobenhanApi.findBySdt(data.sdt)
       console.log(response)
       setHoSoBenhAn(response)
-    } catch (error) {
-      console.error("Error fetching medical record:", error)
+    } catch (error:any) {
+      toast.error(error.response?.data.message || "Không tìm thấy hồ sơ bệnh án")
+      console.error("Error fetching medical record:", error.response?.data || error)
     } finally {
       setLoading(false)
     }
@@ -141,6 +144,7 @@ export default function HoSoBenhAnPage() {
                         benhAn={benhan}
                         onSuccess={handleBenhAnSuccess}
                         trigger={
+                          user?.nhanvien?.chucvu != 'dieuduong' && //an nut cap nhat
                           <Button variant="outline" size="sm" className="mr-4">
                             Cập nhật
                           </Button>

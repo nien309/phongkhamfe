@@ -10,7 +10,7 @@ const menuItems = [
   { label: "Tài khoản", icon: UserCog, href: "/admin/tai-khoan", restrictedTo: ['admin_nhansu','bacsi', 'letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang'] }, // restrictedTo: là khi điền actor vào những qly nào thì khi truy cập vào sẽ không hiện những cái đó
   { label: "Nhân viên", icon: Users, href: "/admin/nhan-vien", restrictedTo: ['admin_hethong','bacsi', 'letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang'] },
   { label: "Khách hàng", icon: Users, href: "/admin/khach-hang", restrictedTo: ['admin_hethong','bacsi', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang'] },
-  // { label: "Lịch làm việc", icon: CalendarDays, href: "/admin/lich-lam-viec", restrictedTo: ['admin_hethong','khachhang ']},
+  { label: "Lịch làm việc", icon: CalendarDays, href: "/admin/lich-lam-viec", restrictedTo: ['admin_hethong','khachhang ']},
   { label: "Lịch hẹn", icon: CalendarDays, href: "/admin/lich-hen", restrictedTo: ['admin_nhansu','admin_hethong','thungan', 'kythuatvien', 'dieuduong', 'khachhang']},
   { label: "Duyệt lịch làm việc", icon: CalendarDays, href: "/admin/duyet-lich-lam-viec", restrictedTo: ['admin_hethong','bacsi','letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang' ] },
   { label: "Lịch đăng ký làm việc", icon: CalendarDays, href: "/admin/lich-dky-lamviec", restrictedTo: ['admin_hethong','admin_nhansu','letan', 'thungan', 'kythuatvien', 'dieuduong', 'khachhang'] },

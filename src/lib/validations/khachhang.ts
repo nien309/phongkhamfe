@@ -7,9 +7,14 @@ export const khachhangSchema = z.object({
     matkhau: z.string().optional(),
     matkhau_confirmation: z.string().optional(),
     gioitinh: z.string().min(1, "Giới tính không được để trống"),
+    // gioitinh: z.enum(["Nam", "Nữ", "Khác"], {
+    //   errorMap: () => ({ message: "Vui lòng chọn giới tính hợp lệ" })
+    // })
     ngaysinh: z.string(),
     diachi: z.string().min(1, "Địa chỉ không được để trống"),
     sdt: z.string().min(10, "Số điện thoại không hợp lệ"),
+  //   sdt: z.string()
+  // .regex(/^(0|\+84)[1-9][0-9]{8}$/, "Số điện thoại không hợp lệ")
     email: z.string().email("Email không hợp lệ"),
     trangthai: z.string().min(1, "Trạng thái không được để trống"),
     loai_taikhoan: z.literal("khachhang"),

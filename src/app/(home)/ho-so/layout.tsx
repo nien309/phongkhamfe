@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function HoSoLayout({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading } = useAuth(); //user: thông tin ng dùng hiện tại
   const router = useRouter();
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function HoSoLayout({ children }: { children: React.ReactNode }) 
     }
   }, [user, isLoading, router]);
 
-  if (isLoading) {
+  if (isLoading) { //min-h-screen: chiếm toàn bộ chiều cao màn hình
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
